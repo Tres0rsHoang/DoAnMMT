@@ -46,7 +46,18 @@ def App_running(HOST, PORT):
     for i in range(size):
         client.sendall(bytes(list_thread[i], "utf8"))
         check = client.recv(1024)
+
+def App_running_kill(ID):
+    import subprocess
+    cmd = 'powershell taskkill /F /PID ' + str(ID)
+    try:
+        proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+        return 1
+    except:
+        return 0
+
 try: 
     App_running(HOST,PORT)
+    App_running_kill(1368)
 finally:
     server.close()
