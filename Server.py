@@ -7,7 +7,6 @@ server.bind((HOST, PORT))
 server.listen(2)
 client, addr = server.accept()
 print('Connected by', addr)
-print('hello')
 
 def App_running(HOST, PORT):
     import subprocess
