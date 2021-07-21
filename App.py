@@ -8,18 +8,6 @@ app = Tk()
 app.geometry("500x300")
 app.title("MainWindow")
 
-def NewWindow():
-    return
-def ProcessRunning(): #1
-    newApp = Tk()
-    newApp.geometry("500x300")
-    newApp.title("Process Running")
-    newApp = Label(newApp, text = "hi").grid(row = 0, column = 0)
-def AppRunning(): #2
-    newApp = Tk()
-    newApp.geometry("500x300")
-    newApp.title("App Running")
-    newApp = Label(newApp, text = "hi").grid(row = 0, column = 0)
 def Close():
     newApp = Tk()
     newApp.geometry("500x300")
