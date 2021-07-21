@@ -1,5 +1,6 @@
 import socket
 
+print('abc')
 HOST = '127.0.0.1'  
 PORT = 1233
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -56,7 +57,7 @@ def App_running_kill(ID):
     except:
         return 0
 
-try: 
+try:
     App_running(HOST,PORT)
     App_running_kill(1368)
 finally:
