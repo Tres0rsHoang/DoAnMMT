@@ -12,6 +12,9 @@ def App_running(HOST, PORT):
     import subprocess
     cmd = 'powershell "Get-Process |where {$_.mainWindowTItle} |format-table id,name'
     proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    for line in proc.stdout:
+        if line.rstrip():
+            print(line.decode().rstrip().lstrip())
     count = 0
     size = 0
     list_name = ['' for i in range(100)]

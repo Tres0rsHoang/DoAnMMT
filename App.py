@@ -56,6 +56,7 @@ Host = Entry(
     app, 
     width = 60
 )
+Host.insert(END, "Nhập IP của Server")
 Host.grid(
     row=0,
     column=0, 
@@ -70,6 +71,7 @@ Ketnoi = Button(
     pady = 15, 
     command=NewWindow
 ).grid(row = 0, column = 3)
+
 Process = Button(
     app, 
     text="Process Running", 
@@ -77,6 +79,7 @@ Process = Button(
     pady = 100, 
     command=ProcessRunning
 ).grid(row = 1, column = 0,padx = 0, pady = 0, rowspan = 3)
+
 AppRun = Button(
     app, 
     text = "App Running", 
@@ -84,6 +87,7 @@ AppRun = Button(
     pady = 22, 
     command=AppRunning
 ).grid(row = 1, column = 1, columnspan = 2)
+
 Close = Button(
     app, 
     text="Tắt máy", 
@@ -91,6 +95,7 @@ Close = Button(
     pady = 22, 
     command=Close
 ).grid(row = 2, column = 1)
+
 PrintScreen = Button(
     app, 
     text="Chụp màn hình", 
@@ -98,6 +103,7 @@ PrintScreen = Button(
     pady = 22, 
     command=PrintScreen
 ).grid(row = 2, column = 2)
+
 Registry = Button(
     app, 
     text="Sửa Registry", 
@@ -105,6 +111,7 @@ Registry = Button(
     pady = 22, 
     command=Registry
 ).grid(row = 3, column = 1, columnspan = 2)
+
 Keystroke = Button(
     app, 
     text="Keystroke", 
@@ -112,6 +119,7 @@ Keystroke = Button(
     pady = 60, 
     command=Keystroke
 ).grid(row = 1, column = 3, rowspan = 2)
+
 Quit = Button(
     app, 
     text="Thoát",
