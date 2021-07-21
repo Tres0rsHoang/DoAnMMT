@@ -1,17 +1,30 @@
 from tkinter import *
 from tkinter import messagebox
+from Client import *
 
-Host = '127.0.0.1'
+IP = '127.0.0.1'
 Port = 1233
 
 app = Tk()
 app.geometry("500x300")
 app.title("MainWindow")
 
-print('abc')
-print('Hihihi')
-print('Hihi cai con khi')
+def NewWindow():
+    global IP
+    IP = ''
+    IP = Host.get()
+    print(IP)
 
+def ProcessRunning():
+    newApp = Tk()
+    newApp.geometry("500x300")
+    newApp.title("Close")
+    newApp = Label(newApp, text = "hi").grid(row = 0, column = 0)
+def AppRunning():
+    newApp = Tk()
+    newApp.geometry("500x300")
+    newApp.title("Close")
+    newApp = Label(newApp, text = "hi").grid(row = 0, column = 0)
 def Close():
     newApp = Tk()
     newApp.geometry("500x300")
@@ -40,7 +53,8 @@ def Quit():
         return 0
 
 
-Host = Entry(app, width = 60).grid(row=0,column=0, columnspan = 3, padx = 20, pady = 20)
+Host = Entry(app, width = 60)
+Host.grid(row=0,column=0, columnspan = 3, padx = 20, pady = 20)
 Ketnoi = Button(app, text="Kết nối", padx = 15, pady = 15, command=NewWindow).grid(row = 0, column = 3)
 Process = Button(app, text="Process Running", padx = 0, pady = 100, command=ProcessRunning).grid(row = 1, column = 0,padx = 0, pady = 0, rowspan = 3)
 AppRun = Button(app, text = "App Running", padx = 80, pady = 22, command=AppRunning).grid(row = 1, column = 1, columnspan = 2)
