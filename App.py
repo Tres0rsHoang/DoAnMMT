@@ -10,6 +10,7 @@ app.title("MainWindow")
 
 print('abc')
 print('Hihihi')
+print('Hihi cai con khi')
 
 def Close():
     newApp = Tk()
