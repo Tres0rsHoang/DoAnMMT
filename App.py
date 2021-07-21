@@ -21,20 +21,49 @@ def ProcessRunning():
 
 def AppRunning():
     newApp = Tk()
-    newApp.geometry("500x300")
-    newApp.title("Close")
-    newApp = Label(newApp, text = "hi").grid(row = 0, column = 0)
+    newApp.geometry("450x300")
+    newApp.title("listApp")
+    kill = Button(
+        newApp,
+        text = "Kill",
+        padx = 30, 
+        pady = 20
+    ).grid(row = 0, column = 0, padx = 10, pady = 10)
+    
+    Xem = Button(
+        newApp,
+        text = "Xem",
+        padx = 30, 
+        pady = 20
+    ).grid(row = 0, column = 1, padx = 10, pady = 10)
+    
+    Xoa = Button(
+        newApp,
+        text =  "Xóa",
+        padx = 30, 
+        pady = 20
+    ).grid(row = 0, column = 2, padx = 10, pady = 10)
+
+    Start = Button(
+        newApp,
+        text="Start",
+        padx = 30, 
+        pady = 20
+    ).grid(row = 0, column = 3, padx = 10, pady = 10)
+
+    
+    
 def Close():
     newApp = Tk()
     newApp.geometry("500x300")
     newApp.title("Close")
     newApp = Label(newApp, text = "hi").grid(row = 0, column = 0)
-def PrintScreen(): #4
+def PrintScreen(): 
     newApp = Tk()
     newApp.geometry("500x300")
     newApp.title("PrintScreen")
     newApp = Label(newApp, text = "hi").grid(row = 0, column = 0)
-def Registry(): #
+def Registry(): 
     newApp = Tk()
     newApp.geometry("500x300")
     newApp.title("Registry")
