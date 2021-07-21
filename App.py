@@ -9,6 +9,8 @@ app.geometry("500x300")
 app.title("MainWindow")
 
 print('abc')
+print('Hihi cai con khi')
+
 def Close():
     newApp = Tk()
     newApp.geometry("500x300")
