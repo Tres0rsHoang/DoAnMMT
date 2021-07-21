@@ -1,9 +1,5 @@
 import socket
 
-print('abc')
-print('Hihihi')
-print('Khong hihihi gi ca')
-
 HOST = '127.0.0.1'  
 PORT = 1233
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -11,6 +7,7 @@ server.bind((HOST, PORT))
 server.listen(2)
 client, addr = server.accept()
 print('Connected by', addr)
+print('hello')
 
 def App_running(HOST, PORT):
     import subprocess
