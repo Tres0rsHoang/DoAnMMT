@@ -3,15 +3,8 @@ from tkinter import messagebox
 from Client import *
 import socket
 
-IP = '127.0.0.1'
-Port = 1233
-server_address = (IP,Port)
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-try:
-    client.connect(server_address)
-    print("Connecting to server" + str(server_address))
-except:
-    print("Can\'t connect to server...")
+HOST = '127.0.0.1'
+PORT = 1233
 
 app = Tk()
 app.geometry("500x300")
@@ -21,6 +14,13 @@ def NewWindow():
     global IP
     IP = ''
     IP = Host.get()
+    server_address = (HOST,PORT)
+    su = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    su.connect(server_address)
+    if IP == HOST:
+        connected = messagebox.showinfo("Kết nối", "Bạn đã kết nối thành công!!!")
+    else:
+        connected = messagebox.showinfo("Kết nối", "IP sai")
 
 def AppRunning():
     newWin = Tk()
