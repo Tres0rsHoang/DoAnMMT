@@ -81,7 +81,6 @@ def AppRunning():
         enterID.insert(END,"Nhập ID")
         def PressKill2():
             ID = enterID.get()
-            print(ID)
             client.sendall(bytes("Xoa App","utf8"))
             try:
                 check = client.recv(1024).decode("utf8")
