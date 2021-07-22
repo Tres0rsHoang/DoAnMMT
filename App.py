@@ -11,31 +11,32 @@ app.geometry("500x300")
 app.title("MainWindow")
 
 def NewWindow():
-    global IP
-    IP = ''
-    IP = Host.get()
+    global HOST
+    global client
+    HOST = Host.get()
     server_address = (HOST,PORT)
-    su = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    su.connect(server_address)
-    if IP == HOST:
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        client.connect(server_address)
         connected = messagebox.showinfo("Kết nối", "Bạn đã kết nối thành công!!!")
-    else:
+    except:
         connected = messagebox.showinfo("Kết nối", "IP sai")
-
 def AppRunning():
     newWin = Tk()
     newWin.geometry("450x300")
     newWin.title("listApp")
 
     def PressXem():
-        global IP
-        global Port
+        global HOST
+        global PORT
         size = 0
         list_id = [''] * 100
         list_name = [''] * 100
         list_thread = [''] * 100
         client.sendall(bytes("Xem App","utf8"))
-        size, list_id, list_name, list_thread = Recieve_App_Running(client, IP, Port)
+        check = client.recv(1024).decode("utf8")
+        size, list_id, list_name, list_thread = Recieve_App_Running(client, HOST, PORT)
+        print(size)
         text = Label(
             newWin,
             text="Name Application"
