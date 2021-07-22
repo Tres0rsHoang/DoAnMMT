@@ -24,18 +24,12 @@ def NewWindow():
         connected = messagebox.showinfo("Kết nối", "IP sai")
 def AppRunning():
     newWin = Tk()
-    #newWin.geometry("445x300")
+    newWin.geometry("450x300")
     newWin.title("listApp")
 
-    def PressXoa():
-        global table
-        table.destroy()
-
     def PressXem():
-        global size
-        global table
-        table = LabelFrame(newWin)
-        table.destroy()
+        global HOST
+        global PORT
         size = 0
         list_id = [''] * 100
         list_name = [''] * 100
@@ -43,38 +37,31 @@ def AppRunning():
         client.sendall(bytes("Xem App","utf8"))
         check = client.recv(1024).decode("utf8")
         size, list_id, list_name, list_thread = Recieve_App_Running(client, HOST, PORT)
-
-        table = LabelFrame(newWin, padx=20, pady=10)
-        table.grid(row=1,columnspan=10, pady = 5)
-
         text = Label(
-            table,
-            text="Name Application",
-            borderwidth=5,
-            ).grid(row=0,column=0)
+            newWin,
+            text="Name Application"
+            ).grid(row=1,column=0)
         text = Label(
-            table,
-            text="ID Application",
-            borderwidth=5,
-            ).grid(row=0,column=1)
+            newWin,
+            text="ID Application"
+            ).grid(row=1,column=1)
         text = Label(
-            table,
-            text="Thread Count",
-            borderwidth=5,
-            ).grid(row = 0,column = 2)
+            newWin,
+            text="Thread Count"
+            ).grid(row=1,column=2)
         for i in range(size):
             text = Label(
-                    table,
+                    newWin,
                     text = list_id[i]
                 ).grid(row = 2+i, column = 1)
             text = Label(
-                    table,
+                    newWin,
                     text = list_name[i]
                 ).grid(row = 2+i, column = 0)
             text = Label(
-                    table,
+                    newWin,
                     text = list_thread[i]
-                ).grid(row=2+i, column = 2)
+                ).grid(row=2+i,column = 2)
     def PressKill():
         newWin2 = Tk()
         newWin2.geometry("300x50")
@@ -146,22 +133,21 @@ def AppRunning():
         padx = 30, 
         pady = 20,
         command= PressKill
-        ).grid(row = 0, column = 0, padx = 10)
+    ).grid(row = 0, column = 0, padx = 10, pady = 10)
     Xem = Button(
         newWin,
         text = "Xem",
         padx = 30, 
         pady = 20,
         command = PressXem
-        ).grid(row = 0, column = 1, padx = 10)
+    ).grid(row = 0, column = 1, padx = 10, pady = 10)
     
     Xoa = Button(
         newWin,
         text =  "Xóa",
         padx = 30, 
-        pady = 20,
-        command = PressXoa
-        ).grid(row = 0, column = 2, padx = 10)
+        pady = 20
+    ).grid(row = 0, column = 2, padx = 10, pady = 10)
 
     Start = Button(
         newWin,
@@ -169,7 +155,7 @@ def AppRunning():
         padx = 30, 
         pady = 20,
         command = PressStart
-    ).grid(row = 0, column = 3, padx = 10)
+    ).grid(row = 0, column = 3, padx = 10, pady = 10)
 
 def ProcessRunning():
     newApp = Tk()
@@ -177,11 +163,14 @@ def ProcessRunning():
     newApp.title("Close")
     newApp = Label(newApp, text = "hi").grid(row = 0, column = 0)
 
+
 def Close():
-    newApp = Tk()
-    newApp.geometry("500x300")
-    newApp.title("Close")
-    newApp = Label(newApp, text = "hi").grid(row = 0, column = 0)
+    connect = messagebox.askyesno("tat may", "Ban muon tat may")
+    if connect == 1:
+        client.sendall(bytes("Shutdown","utf8"))
+    else:
+        return
+        
 def PrintScreen(): 
     newApp = Tk()
     newApp.geometry("500x300")
