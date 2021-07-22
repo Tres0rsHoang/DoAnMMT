@@ -35,7 +35,7 @@ def AppRunning():
         list_id = [''] * 100
         list_name = [''] * 100
         list_thread = [''] * 100
-        Client.sendall(bytes("Xem App","utf8"))
+        client.sendall(bytes("Xem App","utf8"))
         size, list_id, list_name, list_thread = Recieve_App_Running(client, IP, Port)
         text = Label(
             newWin,
