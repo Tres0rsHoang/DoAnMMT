@@ -56,6 +56,7 @@ def App_running_kill(ID_App):
     except:
         return 0
 
+
 try:
     while True:
         try:

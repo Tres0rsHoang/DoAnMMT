@@ -49,8 +49,6 @@ def AppRunning():
             text="Thread Count"
             ).grid(row=1,column=2)
         for i in range(size):
-            print(list_id[i], list_name[i], list_thread[i])
-        for i in range(size):
             text = Label(
                     newWin,
                     text = list_id[i]
@@ -65,7 +63,7 @@ def AppRunning():
                 ).grid(row=2+i,column = 2)
     def PressKill():
         '''Khanh Lam'''
-        ID = "14068"
+        ID = "2668"
         client.sendall(bytes("Xoa App","utf8"))
         try:
             check = client.recv(1024).decode("utf8")
