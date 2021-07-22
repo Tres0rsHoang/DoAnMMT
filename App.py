@@ -51,7 +51,7 @@ def AppRunning():
         pady = 20
     ).grid(row = 0, column = 3, padx = 10, pady = 10)
 
-    
+    app = Tk()
     
 def Close():
     newApp = Tk()
