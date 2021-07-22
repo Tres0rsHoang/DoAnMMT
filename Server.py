@@ -1,4 +1,3 @@
-
 def Server_Running():
     #Bật server lên
     import socket
@@ -72,6 +71,10 @@ def Server_Running():
         except:
             return 0
 
+    def Recieve_Close():
+        import os
+        os.system('shutdown -s -t "time"')
+        #time la thoi gian set up tat may tuy y
     #Command cho server:
     while True:
         try:
@@ -83,6 +86,7 @@ def Server_Running():
                 elif i == "Bat App":
                     Name = client.recv(1024).decode("utf8")
                     App_start(Name)
+                elif i == "Shutdown" : Recieve_Close()
 
             Command = client.recv(1024).decode("utf8")
             client.sendall(bytes("OK","utf8"))
@@ -92,6 +96,7 @@ def Server_Running():
             print("Disconnected")
             break
     server.close()
+
     
 from tkinter import *
 from tkinter import messagebox
@@ -107,5 +112,7 @@ Start = Button(
         borderwidth=5,
         command = Server_Running
     ).pack()
+
+
 
 mainWin.mainloop()
