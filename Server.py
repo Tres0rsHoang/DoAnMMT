@@ -36,7 +36,7 @@ def App_running(HOST, PORT):
     client.sendall(bytes(str(size),"utf8"))
 
     for i in range(size):
-        client.send(bytes(list_id[i],"utf8"))
+        client.sendall(bytes(list_id[i],"utf8"))
         check = client.recv(1024)
 
     for i in range(size):
@@ -47,17 +47,31 @@ def App_running(HOST, PORT):
         client.sendall(bytes(list_thread[i], "utf8"))
         check = client.recv(1024)
 
-def App_running_kill(ID):
+def App_running_kill(ID_App):
     import subprocess
-    cmd = 'powershell taskkill /F /PID ' + str(ID)
+    cmd = 'powershell taskkill /F /PID ' + ID_App
     try:
-        proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+        proc = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE)
         return 1
     except:
         return 0
 
+
 try:
-    App_running(HOST,PORT)
-    App_running_kill(1368)
+    while True:
+        try:
+            def Command_catch(i):
+                if i == "Xem App": App_running(HOST,PORT)
+                elif i == "Xoa App":
+                    client.sendall(bytes("OK","utf8"))
+                    ID_App = client.recv(1024).decode("utf8") 
+                    App_running_kill(ID_App)
+
+            Command = client.recv(1024).decode("utf8")
+            print(Command)
+            Command_catch(Command)
+        except:
+            print("Disconnected")
+            break
 finally:
     server.close()
