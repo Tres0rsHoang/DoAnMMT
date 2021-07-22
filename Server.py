@@ -1,10 +1,9 @@
 
 def Server_Running():
-
+    #Bật server lên
     import socket
     HOST = ''  
     PORT = 1233
-
     hostname = socket.gethostname()
     ip_address = socket.gethostbyname(hostname)
     HOST = str(ip_address)
@@ -15,6 +14,9 @@ def Server_Running():
     client, addr = server.accept()
     print('Connected by', addr)
 
+
+
+    #Function cho server:
     def App_running(HOST, PORT):
         import subprocess
         cmd = 'powershell "Get-Process |where {$_.mainWindowTItle} |Select-Object id, name, @{Name=\'ThreadCount\';Expression ={$_.Threads.Count}}| format-table'
@@ -61,7 +63,16 @@ def Server_Running():
             return 1
         except:
             return 0
+    def App_start(Name):
+        import subprocess
+        cmd = 'powershell start ' + Name
+        try:
+            proc = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE)
+            return 1
+        except:
+            return 0
 
+    #Command cho server:
     while True:
         try:
             def Command_catch(i):
@@ -69,6 +80,9 @@ def Server_Running():
                 elif i == "Xoa App": 
                     ID_App = client.recv(1024).decode("utf8") 
                     App_running_kill(ID_App)
+                elif i == "Bat App":
+                    Name = client.recv(1024).decode("utf8")
+                    App_start(Name)
 
             Command = client.recv(1024).decode("utf8")
             client.sendall(bytes("OK","utf8"))
@@ -93,4 +107,5 @@ Start = Button(
         borderwidth=5,
         command = Server_Running
     ).pack()
+
 mainWin.mainloop()

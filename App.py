@@ -62,7 +62,6 @@ def AppRunning():
                     newWin,
                     text = list_thread[i]
                 ).grid(row=2+i,column = 2)
-
     def PressKill():
         newWin2 = Tk()
         newWin2.geometry("300x50")
@@ -95,8 +94,39 @@ def AppRunning():
                 padx = 20,
                 command = PressKill2
             ).grid(row=0, column=4, padx=5, pady=5)
-        
-        
+    def PressStart():
+        newWin3 = Tk()
+        newWin3.geometry("300x50")
+        newWin3.title("Start")
+        enterName = Entry(
+                newWin3,
+                width = 35
+            )
+        enterName.grid(
+                row=0,
+                column=0, 
+                columnspan = 3,
+                padx = 5,
+                pady = 5 
+            )
+        enterName.insert(END,"Nhập Tên")
+        def PressStart():
+            Name = enterName.get()
+            client.sendall(bytes("Bat App","utf8"))
+            try:
+                check = client.recv(1024).decode("utf8")
+                client.sendall(bytes(Name,"utf8"))
+                click = messagebox.showinfo("", "Chương trình đã bật")
+            except:
+                click = messagebox.showinfo("", "Không tìm thấy chương trình")
+
+        bStart = Button(
+                newWin3,
+                text = "Start",
+                padx = 20,
+                command = PressStart
+            ).grid(row=0, column=4, padx=5, pady=5)
+
     kill = Button(
         newWin,
         text = "Kill",
@@ -104,7 +134,6 @@ def AppRunning():
         pady = 20,
         command= PressKill
     ).grid(row = 0, column = 0, padx = 10, pady = 10)
-    
     Xem = Button(
         newWin,
         text = "Xem",
@@ -124,9 +153,9 @@ def AppRunning():
         newWin,
         text="Start",
         padx = 30, 
-        pady = 20
+        pady = 20,
+        command = PressStart
     ).grid(row = 0, column = 3, padx = 10, pady = 10)
-
 def ProcessRunning():
     newApp = Tk()
     newApp.geometry("500x300")
@@ -164,7 +193,7 @@ def Quit():
 Host = Entry(
     app, 
     width = 60
-)
+    )
 Host.insert(END, "Nhập IP của Server")
 Host.grid(
     row=0,
@@ -172,14 +201,14 @@ Host.grid(
     columnspan = 3, 
     padx = 20, 
     pady = 20
-)
+    )
 Ketnoi = Button(
     app, 
     text="Kết nối", 
     padx = 15, 
     pady = 15, 
     command=NewWindow
-).grid(row = 0, column = 3)
+    ).grid(row = 0, column = 3)
 
 Process = Button(
     app, 
@@ -187,7 +216,7 @@ Process = Button(
     padx = 0, 
     pady = 100, 
     command=ProcessRunning
-).grid(row = 1, column = 0,padx = 0, pady = 0, rowspan = 3)
+    ).grid(row = 1, column = 0,padx = 0, pady = 0, rowspan = 3)
 
 AppRun = Button(
     app, 
@@ -195,7 +224,7 @@ AppRun = Button(
     padx = 80, 
     pady = 22, 
     command=AppRunning
-).grid(row = 1, column = 1, columnspan = 2)
+    ).grid(row = 1, column = 1, columnspan = 2)
 
 Close = Button(
     app, 
@@ -203,7 +232,7 @@ Close = Button(
     padx = 15, 
     pady = 22, 
     command=Close
-).grid(row = 2, column = 1)
+    ).grid(row = 2, column = 1)
 
 PrintScreen = Button(
     app, 
@@ -211,7 +240,7 @@ PrintScreen = Button(
     padx = 15, 
     pady = 22, 
     command=PrintScreen
-).grid(row = 2, column = 2)
+    ).grid(row = 2, column = 2)
 
 Registry = Button(
     app, 
@@ -219,7 +248,7 @@ Registry = Button(
     padx = 85,
     pady = 22, 
     command=Registry
-).grid(row = 3, column = 1, columnspan = 2)
+    ).grid(row = 3, column = 1, columnspan = 2)
 
 Keystroke = Button(
     app, 
@@ -227,7 +256,7 @@ Keystroke = Button(
     padx = 8, 
     pady = 60, 
     command=Keystroke
-).grid(row = 1, column = 3, rowspan = 2)
+    ).grid(row = 1, column = 3, rowspan = 2)
 
 Quit = Button(
     app, 
@@ -235,6 +264,6 @@ Quit = Button(
     padx = 20,
     pady = 22, 
     command=Quit
-).grid(row = 3, column = 3)
+    ).grid(row = 3, column = 3)
 
 app.mainloop()
