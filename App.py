@@ -1,8 +1,17 @@
 from tkinter import *
 from tkinter import messagebox
+from Client import *
+import socket
 
 IP = '127.0.0.1'
 Port = 1233
+server_address = (IP,Port)
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+try:
+    client.connect(server_address)
+    print("Connecting to server" + str(server_address))
+except:
+    print("Can\'t connect to server...")
 
 app = Tk()
 app.geometry("500x300")
@@ -13,46 +22,95 @@ def NewWindow():
     IP = ''
     IP = Host.get()
 
-def ProcessRunning():
-    newApp = Tk()
-    newApp.geometry("500x300")
-    newApp.title("Close")
-    newApp = Label(newApp, text = "hi").grid(row = 0, column = 0)
-
 def AppRunning():
-    newApp = Tk()
-    newApp.geometry("450x300")
-    newApp.title("listApp")
+    newWin = Tk()
+    newWin.geometry("450x300")
+    newWin.title("listApp")
+
+    def PressXem():
+        global IP
+        global Port
+        size = 0
+        list_id = [''] * 100
+        list_name = [''] * 100
+        list_thread = [''] * 100
+        client.sendall(bytes("Xem App","utf8"))
+        size, list_id, list_name, list_thread = Recieve_App_Running(client, IP, Port)
+        text = Label(
+            newWin,
+            text="Name Application"
+            ).grid(row=1,column=0)
+        text = Label(
+            newWin,
+            text="ID Application"
+            ).grid(row=1,column=1)
+        text = Label(
+            newWin,
+            text="Thread Count"
+            ).grid(row=1,column=2)
+        for i in range(size):
+            print(list_id[i], list_name[i], list_thread[i])
+        for i in range(size):
+            text = Label(
+                    newWin,
+                    text = list_id[i]
+                ).grid(row = 2+i, column = 1)
+            text = Label(
+                    newWin,
+                    text = list_name[i]
+                ).grid(row = 2+i, column = 0)
+            text = Label(
+                    newWin,
+                    text = list_thread[i]
+                ).grid(row=2+i,column = 2)
+    def PressKill():
+        '''Khanh Lam'''
+        ID = "14068"
+        client.sendall(bytes("Xoa App","utf8"))
+        try:
+            check = client.recv(1024).decode("utf8")
+            print(check)
+            client.sendall(bytes(ID,"utf8"))
+            #Khanh Lam
+        except:
+            #Khanh Lam
+            print("Can't kill")
+
     kill = Button(
-        newApp,
+        newWin,
         text = "Kill",
         padx = 30, 
-        pady = 20
+        pady = 20,
+        command= PressKill
     ).grid(row = 0, column = 0, padx = 10, pady = 10)
     
     Xem = Button(
-        newApp,
+        newWin,
         text = "Xem",
         padx = 30, 
-        pady = 20
+        pady = 20,
+        command = PressXem
     ).grid(row = 0, column = 1, padx = 10, pady = 10)
     
     Xoa = Button(
-        newApp,
+        newWin,
         text =  "Xóa",
         padx = 30, 
         pady = 20
     ).grid(row = 0, column = 2, padx = 10, pady = 10)
 
     Start = Button(
-        newApp,
+        newWin,
         text="Start",
         padx = 30, 
         pady = 20
     ).grid(row = 0, column = 3, padx = 10, pady = 10)
 
-    
-    
+def ProcessRunning():
+    newApp = Tk()
+    newApp.geometry("500x300")
+    newApp.title("Close")
+    newApp = Label(newApp, text = "hi").grid(row = 0, column = 0)
 def Close():
     newApp = Tk()
     newApp.geometry("500x300")
