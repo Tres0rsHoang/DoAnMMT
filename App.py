@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from Client import *
+import tkinter as tk
 import socket
 
 HOST = '127.0.0.1'
@@ -62,19 +63,42 @@ def AppRunning():
                     newWin,
                     text = list_thread[i]
                 ).grid(row=2+i,column = 2)
-    def PressKill():
-        '''Khanh Lam'''
-        ID = "2668"
-        client.sendall(bytes("Xoa App","utf8"))
-        try:
-            check = client.recv(1024).decode("utf8")
-            print(check)
-            client.sendall(bytes(ID,"utf8"))
-            #Khanh Lam
-        except:
-            #Khanh Lam
-            print("Can't kill")
 
+    def PressKill():
+        newWin2 = Tk()
+        newWin2.geometry("300x50")
+        newWin2.title("Kill")
+        enterID = Entry(
+                newWin2,
+                width = 35
+            )
+        enterID.grid(
+                row=0,
+                column=0, 
+                columnspan = 3,
+                padx = 5,
+                pady = 5 
+            )
+        enterID.insert(END,"Nhập ID")
+        def PressKill2():
+            ID = enterID.get()
+            client.sendall(bytes("Xoa App","utf8"))
+            try:
+                check = client.recv(1024).decode("utf8")
+                print(check)
+                client.sendall(bytes(ID,"utf8"))
+                click = messagebox.showinfo("", "Đã diệt chương trình")
+            except:
+                click = messagebox.showinfo("", "Không tìm thấy chương trình")
+
+        bKill = Button(
+                newWin2,
+                text = "Kill",
+                padx = 20,
+                command = PressKill2
+            ).grid(row=0, column=4, padx=5, pady=5)
+        
+        
     kill = Button(
         newWin,
         text = "Kill",
@@ -105,11 +129,13 @@ def AppRunning():
         pady = 20
     ).grid(row = 0, column = 3, padx = 10, pady = 10)
 
+
 def ProcessRunning():
     newApp = Tk()
     newApp.geometry("500x300")
     newApp.title("Close")
     newApp = Label(newApp, text = "hi").grid(row = 0, column = 0)
+
 def Close():
     newApp = Tk()
     newApp.geometry("500x300")
