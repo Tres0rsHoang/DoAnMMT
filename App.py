@@ -37,7 +37,6 @@ def AppRunning():
         client.sendall(bytes("Xem App","utf8"))
         check = client.recv(1024).decode("utf8")
         size, list_id, list_name, list_thread = Recieve_App_Running(client, HOST, PORT)
-        print(size)
         text = Label(
             newWin,
             text="Name Application"
@@ -85,7 +84,6 @@ def AppRunning():
             client.sendall(bytes("Xoa App","utf8"))
             try:
                 check = client.recv(1024).decode("utf8")
-                print(check)
                 client.sendall(bytes(ID,"utf8"))
                 click = messagebox.showinfo("", "Đã diệt chương trình")
             except:
@@ -128,7 +126,6 @@ def AppRunning():
         padx = 30, 
         pady = 20
     ).grid(row = 0, column = 3, padx = 10, pady = 10)
-
 
 def ProcessRunning():
     newApp = Tk()

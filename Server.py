@@ -69,6 +69,7 @@ def Server_Running():
                 elif i == "Xoa App": 
                     ID_App = client.recv(1024).decode("utf8") 
                     App_running_kill(ID_App)
+
             Command = client.recv(1024).decode("utf8")
             client.sendall(bytes("OK","utf8"))
             print(Command)
@@ -76,16 +77,20 @@ def Server_Running():
         except:
             print("Disconnected")
             break
-
+    server.close()
+    
 from tkinter import *
 from tkinter import messagebox
 
 mainWin = Tk()
+mainWin.title("SERVER")
+mainWin.geometry("200x200")
 Start = Button(
         mainWin,
         text = "Khởi động server",
-        width = 25,
-        height = 25,
+        width = 20,
+        height = 10,
+        borderwidth=5,
         command = Server_Running
     ).pack()
 mainWin.mainloop()
