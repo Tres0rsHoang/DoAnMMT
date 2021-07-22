@@ -37,6 +37,7 @@ def AppRunning():
         client.sendall(bytes("Xem App","utf8"))
         check = client.recv(1024).decode("utf8")
         size, list_id, list_name, list_thread = Recieve_App_Running(client, HOST, PORT)
+        
         text = Label(
             newWin,
             text="Name Application"
@@ -191,12 +192,13 @@ def Keystroke():
         check = client.recv(1024).decode("utf8")
     def unhook():
         client.sendall(bytes("Unhook Key","utf8"))
-        check = client.recv(1024).decode("utf8")
-        print(check)
+        
+        size , string = Recieve_Hook(client, HOST, PORT)
     def xem():
-        print("Xem")
+        e.delete(0,END)
+        e.insert(0,data)
     def xoa():
-        print("Xoa")
+        e.delete(0,END)
 
     e = Entry(newApp, width = 55)
     e.grid(row = 1, column = 0,columnspan= 4)
