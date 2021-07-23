@@ -45,31 +45,28 @@ def AppRunning():
 
         table = Frame(newWin, padx=20, pady = 20, borderwidth=5)
         table.grid(row=1,columnspan=5,padx=20)
-        text = Label(
-            table,
-            text="Name Application"
-            ).grid(row=0,column=0)
-        text = Label(
-            table,
-            text="ID Application"
-            ).grid(row=0,column=1)
-        text = Label(
-            table,
-            text="Thread Count"
-            ).grid(row=0,column=2)
+        from tkinter import ttk
+
+        tree_scroll = Scrollbar(table)
+        tree_scroll.pack(side=RIGHT,fill=Y)
+
+        my_tree=ttk.Treeview(table, yscrollcommand=tree_scroll.set)
+        my_tree.pack()
+
+        tree_scroll.config(command=my_tree.yview)
+
+        my_tree['columns'] = ("1","2") 
+        my_tree.column("#0", anchor=CENTER, width =200,minwidth=25)
+        my_tree.column("1", anchor=CENTER, width=60)
+        my_tree.column("2", anchor=CENTER, width=100)
+
+        my_tree.heading("#0", text="Name Process", anchor=W)
+        my_tree.heading("1",text = "ID", anchor=CENTER)
+        my_tree.heading("2", text = "Thread count", anchor=CENTER)
+
         for i in range(size):
-            text = Label(
-                    table,
-                    text = list_id[i]
-                ).grid(row = i+1, column = 1)
-            text = Label(
-                    table,
-                    text = list_name[i]
-                ).grid(row = i+1, column = 0)
-            text = Label(
-                    table,
-                    text = list_thread[i]
-                ).grid(row=i+1,column = 2)
+            my_tree.insert(parent='', index='end',iid=0+i, text = list_name[i], values=(list_id[i],list_thread[i]))
+
     def PressKill():
         newWin2 = Tk()
         newWin2.geometry("300x50")
