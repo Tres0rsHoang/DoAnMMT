@@ -187,7 +187,6 @@ def Server_Running():
             myfile.close()
         except:
             print("Khong the chup man hinh")
-
     def Process_running():
         import subprocess
 

@@ -187,7 +187,14 @@ def ProcessRunning():
         table.grid(row=1,columnspan=5,padx=20)
         
         from tkinter import ttk
-        my_tree =ttk.Treeview(table)
+
+        tree_scroll = Scrollbar(table)
+        tree_scroll.pack(side=RIGHT,fill=Y)
+
+        my_tree=ttk.Treeview(table, yscrollcommand=tree_scroll.set)
+        my_tree.pack()
+
+        tree_scroll.config(command=my_tree.yview)
 
         my_tree['columns'] = ("1","2") 
         my_tree.column("#0", anchor=CENTER, width =200,minwidth=25)
@@ -201,7 +208,7 @@ def ProcessRunning():
         for i in range(size):
             my_tree.insert(parent='', index='end',iid=0+i, text = list_name[i], values=(list_id[i],list_thread[i]))
 
-        my_tree.pack(pady=20,padx=20)
+        
     def PressKillProcess():
         newWin2 = Tk()
         newWin2.geometry("300x50")
