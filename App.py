@@ -188,8 +188,7 @@ def Registry():
 def Keystroke():
     newApp = Tk()
     newApp.geometry("500x300")
-    newApp.title("Keystroke")
-   
+    newApp.title("Keystroke")  
     def hook():
         client.sendall(bytes("Hook Key","utf8"))
         check = client.recv(1024).decode("utf8")
@@ -197,6 +196,7 @@ def Keystroke():
         client.sendall(bytes("Unhook Key","utf8"))
         
         size , string = Recieve_Hook(client, HOST, PORT)
+
     def xem():
         e.delete(0,END)
         e.insert(0,data)
