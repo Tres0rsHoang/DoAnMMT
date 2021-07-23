@@ -201,6 +201,8 @@ def Keystroke():
         client.sendall(bytes("Unhook Key","utf8"))
         size , string = Recieve_Hook(client, HOST, PORT)
     def xem():
+        client.sendall(bytes("Xem Key","utf8"))
+        size , string = Recieve_Hook(client, HOST, PORT)
         e.delete(0,END)
         e.insert(0,string)
     def xoa():

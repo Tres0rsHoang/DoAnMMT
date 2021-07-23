@@ -88,7 +88,7 @@ def Server_Running():
                         while True:                       
                             check = client.recv(1024).decode("utf8")
                             print(check)
-                            if check == "Unhook Key":                 
+                            if check == "Unhook Key" or check == "Xem Key":                 
                                 KeyStop = False
                                 break
                     finally:
