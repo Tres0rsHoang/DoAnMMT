@@ -185,9 +185,66 @@ def Server_Running():
             #gui du lieu qua client
             client.sendall(bytes)
             myfile.close()
-        finally:
-            print("sever close")
+        except:
+            print("Khong the chup man hinh")
 
+    def Process_running():
+        import subprocess
+
+        cmd = 'powershell "Get-Process | Select-Object id, name, @{Name=\'ThreadCount\';Expression ={$_.Threads.Count}}| format-table'
+        proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+        '''for line in proc.stdout:
+            if line.rstrip(): print(line.decode().rstrip().lstrip())'''
+        count = 0
+        size = 0
+        list_name = ['' for i in range(100000)]
+        list_id = ['' for i in range(100000)]
+        list_thread = ['' for i in range(100000)]
+
+        for line in proc.stdout:
+            if line.rstrip():
+                if count < 2:
+                    count += 1
+                    continue
+                str_line = str(line.decode().rstrip().lstrip())
+                str_line = " ".join(str_line.split())
+                list_id_name_thread = str_line.split(" ", 3)
+                list_thread[size] = list_id_name_thread[2]
+                list_name[size] = list_id_name_thread[1]
+                list_id[size] = list_id_name_thread[0]
+                size += 1
+        '''for i in range(size):
+            print(list_id[i], list_name[i], list_thread[i])'''
+
+        client.sendall(bytes(str(size),"utf8"))
+        for i in range(size):
+            client.sendall(bytes(list_id[i],"utf8"))
+            check = client.recv(1024)
+
+        for i in range(size):
+            client.sendall(bytes(list_name[i], "utf8"))
+            check = client.recv(1024)
+
+        for i in range(size):
+            client.sendall(bytes(list_thread[i], "utf8"))
+            check = client.recv(1024)
+
+    def Process_running_kill(ID_App):
+        import subprocess
+        cmd = 'powershell taskkill /F /PID ' + ID_App
+        try:
+            proc = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE)
+            return 1
+        except:
+            return 0
+    def Process_start(Name):
+        import subprocess
+        cmd = 'powershell start ' + Name
+        try:
+            proc = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE)
+            return 1
+        except:
+            return 0
 
     #Command cho server:
     while True:
@@ -202,6 +259,15 @@ def Server_Running():
                 App_start(Name)
             elif i == "Hook Key": hook()
             elif i == "Shutdown" : Recieve_Close()
+            elif i == "Chup man hinh": Screenshot()
+            elif i == "Xem Process": Process_running()
+            elif i == "Xoa Process": 
+                Process_App = client.recv(1024).decode("utf8") 
+                Process_running_kill(Process_App)
+            elif i == "Bat Process":
+                Process_Name = client.recv(1024).decode("utf8")
+                Process_start(Process_Name)
+
         Command = client.recv(1024).decode("utf8")
         client.sendall(bytes("Da nhan lenh","utf8"))
         print(Command)
