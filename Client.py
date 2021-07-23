@@ -26,10 +26,10 @@ def Recieve_App_Running(client, HOST, PORT):
 
 #Recieve_App_Running(HOST, PORT)
 def Recieve_Hook(client, HOST, PORT):
-	size =0
+	size = 0
 	size = client.recv(1024).decode("utf8")
 	size = int(size)
-	
+	client.sendall(bytes(str(size),"utf8"))
 	data = client.recv(1024).decode("utf8")
 	list_string= data
 	client.sendall(bytes(data,"utf8"))	

