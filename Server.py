@@ -88,7 +88,7 @@ def Server_Running():
                         while True:                       
                             check = client.recv(1024).decode("utf8")
                             print(check)
-                            if check == "Unhook Key":                 
+                            if check == "Unhook Key" or check == "Xem Key":                 
                                 KeyStop = False
                                 break
                     finally:
@@ -173,6 +173,21 @@ def Server_Running():
         import os
         os.system('shutdown -s -t 30')
         #time la thoi gian set up tat may tuy y
+    def Screenshot():
+        import pyautogui
+        image = pyautogui.screenshot()
+        image = image.resize((500,400)) 
+        image.save("scrshot.png")
+        try:
+            # open image ======
+            myfile = open("scrshot.png", 'rb')
+            bytes = myfile.read()
+            #gui du lieu qua client
+            client.sendall(bytes)
+            myfile.close()
+        finally:
+            print("sever close")
+
 
     #Command cho server:
     while True:

@@ -3,6 +3,9 @@ from tkinter import messagebox
 from Client import *
 import tkinter as tk
 import socket
+from PIL import ImageTk,Image
+from tkinter import filedialog
+import tkinter
 
 HOST = '127.0.0.1'
 PORT = 1233
@@ -176,10 +179,43 @@ def Close():
         return
         
 def PrintScreen(): 
-    newApp = Tk()
-    newApp.geometry("500x300")
+    newApp = Toplevel()
     newApp.title("PrintScreen")
-    newApp = Label(newApp, text = "hi").grid(row = 0, column = 0)
+
+    def Chup():
+        client.sendall(bytes("Chup man hinh","utf8"))
+        check = client.recv(1024).decode("utf8")
+
+        myfile = open("anhcuatui.png", 'wb')
+        data = client.recv(40960000)
+
+        myfile.write(data)
+
+        img = ImageTk.PhotoImage(Image.open("anhcuatui.png"))     
+        canvas.create_image(0,0, anchor=NW, image=img)
+        mainloop()
+
+        myfile.close()
+
+    def savefile():
+        myScreenshot = open("anhcuatui.png",'rb')
+        data = myScreenshot.read()
+        fname = tkinter.filedialog.asksaveasfilename(title=u'Save file', filetypes=[("PNG", ".png")])
+        myScreenshot.close()
+
+        file = open(str(fname) + '.png','wb')
+        file.write(data)
+        file.close()
+
+    canvas = Canvas(newApp, width = 500, height = 400)      
+    canvas.grid(row=0,column=0)    
+
+    but = Button(newApp,text="chup",width=5,height=10,borderwidth=5,command = Chup)
+    but.grid(row=0,column=1)
+
+    but1 = Button(newApp,text="luu",width=5,height=5,borderwidth=5,command=savefile)
+    but1.grid(row=1,column=1)
+
 def Registry(): 
     newApp = Tk()
     newApp.geometry("500x300")
@@ -206,11 +242,16 @@ def Keystroke():
             size , string = Recieve_Hook(client, HOST, PORT)
             unhook_press = True
     def xem():
+<<<<<<< HEAD
         nonlocal size, string, unhook_press
         if unhook_press == False: 
             client.sendall(bytes("Unhook Key","utf8"))
             size , string = Recieve_Hook(client, HOST, PORT)
             unhook_press = True
+=======
+        client.sendall(bytes("Xem Key","utf8"))
+        size , string = Recieve_Hook(client, HOST, PORT)
+>>>>>>> 8a4936dbe78a592bc31c2352c422cad3825fae2c
         e.delete(0,END)
         e.insert(0,string)
     def xoa():
