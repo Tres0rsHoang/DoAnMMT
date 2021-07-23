@@ -32,7 +32,6 @@ def Recieve_Hook(client, HOST, PORT):
 	
 	data = client.recv(1024).decode("utf8")
 	list_string= data
-	client.sendall(bytes(data,"utf8"))
-	print(list_string)	
+	client.sendall(bytes(data,"utf8"))	
 
 	return size, list_string

