@@ -3,12 +3,18 @@ from tkinter import messagebox
 from Client import *
 import tkinter as tk
 import socket
+<<<<<<< HEAD
 from tkinter import filedialog
 import tkinter
 from PIL import ImageTk,Image
 from tkinter import ttk
 from tkinter import filedialog
 global folder_path
+=======
+from PIL import ImageTk,Image
+from tkinter import filedialog
+import tkinter
+>>>>>>> 7bbb7477f3cebdea1ebf6ba4b6296550b27e0a28
 
 HOST = '127.0.0.1'
 PORT = 1233
@@ -234,6 +240,7 @@ def ProcessRunning():
                 click = messagebox.showinfo("", "Đã diệt chương trình")
             except:
                 click = messagebox.showinfo("", "Không tìm thấy chương trình")
+<<<<<<< HEAD
 
         bKill = Button(
                 newWin2,
@@ -297,6 +304,71 @@ def ProcessRunning():
         command = PressXoaProcess
         ).grid(row = 0, column = 2, padx = 10)
 
+=======
+
+        bKill = Button(
+                newWin2,
+                text = "Kill",
+                padx = 20,
+                command = PressKill2Process
+            ).grid(row=0, column=4, padx=5, pady=5)
+    def PressStartProcess():
+        newWin3 = Tk()
+        newWin3.geometry("300x50")
+        newWin3.title("Start")
+        enterName = Entry(
+                newWin3,
+                width = 35
+            )
+        enterName.grid(
+                row=0,
+                column=0, 
+                columnspan = 3,
+                padx = 5,
+                pady = 5 
+            )
+        enterName.insert(END,"Nhập Tên")
+        def PressStartProcess():
+            Name = enterName.get()
+            client.sendall(bytes("Bat Process","utf8"))
+            try:
+                check = client.recv(1024).decode("utf8")
+                client.sendall(bytes(Name,"utf8"))
+                click = messagebox.showinfo("", "Chương trình đã bật")
+            except:
+                click = messagebox.showinfo("", "Không tìm thấy chương trình")
+
+        bStart = Button(
+                newWin3,
+                text = "Start",
+                padx = 20,
+                command = PressStartProcess
+            ).grid(row=0, column=4, padx=5, pady=5)
+
+    kill = Button(
+        newWin,
+        text = "Kill",
+        padx = 30, 
+        pady = 20,
+        command= PressKillProcess
+        ).grid(row = 0, column = 0, padx = 10)
+    Xem = Button(
+        newWin,
+        text = "Xem",
+        padx = 30, 
+        pady = 20,
+        command = PressXemProcess
+        ).grid(row = 0, column = 1, padx = 10)
+    
+    Xoa = Button(
+        newWin,
+        text =  "Xóa",
+        padx = 30, 
+        pady = 20,
+        command = PressXoaProcess
+        ).grid(row = 0, column = 2, padx = 10)
+
+>>>>>>> 7bbb7477f3cebdea1ebf6ba4b6296550b27e0a28
     Start = Button(
         newWin,
         text="Start",
