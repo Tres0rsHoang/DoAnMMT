@@ -9,7 +9,7 @@ def Server_Running():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((HOST, PORT))
     server.listen(2)
-    print(HOST,PORT)
+    print(HOST+':'+str(PORT))
     client, addr = server.accept()
     print('Connected by', addr)
 
@@ -246,14 +246,45 @@ def Server_Running():
     def NhanReg():
         data = client.recv(1024).decode("utf8")
         client.sendall(bytes("Ok Nhan Reg","utf8"))
+        print(data)
         writefile = open("test2.reg","w")
         writefile.write(data)
         import subprocess    
-        cmd = 'powershell"reg import test2.reg"'
-        proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        print(data)
-
-
+        cmd = 'powershell reg import test2.reg'
+        subprocess.Popen(cmd, shell=True)
+    def LayRegValue():
+        import winreg
+        Name = client.recv(1024).decode("utf8")
+        client.sendall(bytes("Ok Nhan Name","utf8"))
+        Link = client.recv(1024).decode("utf8")
+        client.sendall(bytes("Ok Nhan Link","utf8"))
+        hkey = Link.split("\\",2)
+        if hkey[0] == "HKEY_CLASSES_ROOT":
+            keylink = winreg.HKEY_CLASSES_ROOT
+        elif hkey[0] == "HKEY_CURRENT_USER":
+            keylink = winreg.HKEY_CURRENT_USER
+        elif hkey[0] == "HKEY_LOCAL_MACHINE":
+            keylink = winreg.HKEY_LOCAL_MACHINE
+        elif hkey[0] == "HKEY_USERS":
+            keylink = winreg.HKEY_USERS
+        elif hkey[0] == "HKEY_CURRENT_CONFIG":
+            keylink = winreg.HKEY_CURRENT_CONFIG
+        with winreg.ConnectRegistry(None, keylink) as winKey:
+            with winreg.OpenKey(winKey, hkey[1], 0, winreg.KEY_ALL_ACCESS) as sub_key:
+                i = 0
+                while True:
+                    try:
+                        value = winreg.EnumValue(sub_key, i)
+                        if value[0] == Name: 
+                            client.sendall(bytes(value[1],"utf8"))
+                            check = client.recv(1024).decode("utf8")
+                            break
+                        i+=1
+                    except:
+                        client.sendall(bytes("Khong tim thay", "utf8"))
+                        check = client.recv(1024).decode("utf8")
+                        break
+        
     #Command cho server:
     while True:
         #try:
@@ -276,6 +307,8 @@ def Server_Running():
                 Process_Name = client.recv(1024).decode("utf8")
                 Process_start(Process_Name)
             elif i == "Nhan Reg": NhanReg()
+            elif i == "Get value reg": LayRegValue()
+
 
         Command = client.recv(1024).decode("utf8")
         client.sendall(bytes("Da nhan lenh","utf8"))
