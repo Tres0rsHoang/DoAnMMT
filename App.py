@@ -428,8 +428,8 @@ def Registry():
         nonlocal link, FileShow
         client.sendall(bytes("Nhan Reg", "utf8"))
         check = client.recv(1024).decode("utf8")       
-        line = FileShow.get()
-        ReadFile.close()
+        line = FileShow.get(1.0,END)
+        print(line)
         client.sendall(bytes(line,"utf8"))
         check = client.recv(1024).decode("utf8")
 
