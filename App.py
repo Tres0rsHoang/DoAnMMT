@@ -399,7 +399,7 @@ def Quit():
 
 Host = Entry(
     app, 
-    width = 60
+    width = 60,
     )
 Host.insert(END, "Nhập IP của Server")
 Host.grid(
@@ -407,7 +407,7 @@ Host.grid(
     column=0, 
     columnspan = 3, 
     padx = 20, 
-    pady = 20
+    pady = 20,
     )
 Ketnoi = Button(
     app, 
