@@ -523,6 +523,7 @@ def Registry():
             check = client.recv(1024).decode("utf8")
             client.sendall(bytes(Link,"utf8"))
             check = client.recv(1024).decode("utf8")
+            
             data = Recieve_Reg_Value(client)
             if data != "Khong tim thay":
                 text = Label(Nofi_data_frame, text=data)
