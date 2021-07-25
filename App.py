@@ -304,14 +304,12 @@ def ProcessRunning():
         pady = 20,
         command = PressStartProcess
     ).grid(row = 0, column = 3, padx = 10)
-
 def Close():
     connect = messagebox.askyesno("Tắt máy", "Bạn có muốn tắt máy")
     if connect == 1:
         client.sendall(bytes("Shutdown","utf8"))
     else:
-        return
-        
+        return        
 def PrintScreen(): 
     newApp = Toplevel()
     newApp.title("PrintScreen")
@@ -360,23 +358,34 @@ def Registry():
     linkfile = Entry(newapp, width=55)
     linkfile.grid(row=0, column=0, padx = 10)
 
+    folder_path = StringVar()
+    link = ''
+
     def browse_button():
-        filename = filedialog.askdirectory()
+        nonlocal folder_path, link
+        filename = filedialog.askopenfilename()
         folder_path.set(filename)
         linkfile.insert(0, filename)
-
-    folder_path = StringVar()
-
-    linkfile = Entry(newapp, width=55)
-    linkfile.grid(row=0, column=0, padx = 10)
+        link = linkfile.get()
 
     Browser = Button(newapp, text="Browser...", command=browse_button, padx = 28)
     Browser.grid(row=0, column=1, padx = 10)    
      
-    txt = Entry(newapp)
-    txt.grid(row=2, column=0, pady=10, ipady=30, ipadx=105)
+    FileShow = Entry(newapp)
+    FileShow.grid(row=2, column=0, pady=10, ipady=30, ipadx=105)
 
-    GuiNoiDung = Button(newapp, text="Gui noi dung", padx = 20, pady = 28)
+    def SendReg():
+        nonlocal link, FileShow
+        client.sendall(bytes("Nhan Reg", "utf8"))
+        check = client.recv(1024).decode("utf8")
+        ReadFile = open(link,'r')
+        line = ReadFile.read()
+        ReadFile.close()
+        client.sendall(bytes(line,"utf8"))
+        check = client.recv(1024).decode("utf8")
+
+
+    GuiNoiDung = Button(newapp, text="Gửi nội dung", command = SendReg, padx = 20, pady = 28)
     GuiNoiDung.grid(row=2, column=1, padx = 10)
 
     frame = LabelFrame(newapp, text="Sua gia tri truc tiep")
@@ -449,8 +458,8 @@ def Registry():
     DuLieu.insert(0, "Kiểu dữ liệu")
     DuLieu.grid(row=2, column=0, sticky = E, padx=4)
 
-    txt = Entry(frame)
-    txt.grid(row=3, column=0, pady=10, ipady=30, ipadx=172)
+    NoficationShow = Label(frame)
+    NoficationShow.grid(row=3, column=0, pady=10, ipady=30, ipadx=172)
 
     Gui = Button(frame, text="xẻ")
     Gui.grid(row=4, column=0, sticky=SW, ipadx = 30)
@@ -497,7 +506,6 @@ def Keystroke():
     unHook = Button(newApp, text = "Unhook", padx = 20, pady = 20, command = unhook).grid(row = 0,column = 1) 
     inphim = Button(newApp, text = "In phím", padx = 20, pady = 20,command = xem).grid(row = 0,column = 2)
     xoa = Button(newApp, text = "Xóa", padx = 20, pady = 20,command=xoa).grid(row = 0,column = 3)
-
 def Quit():
     click = messagebox.askyesno("Quit?", "Bạn chắc chắn muốn thoát")
     if click == 1:
@@ -525,7 +533,6 @@ Ketnoi = Button(
     pady = 15, 
     command=NewWindow
     ).grid(row = 0, column = 3)
-
 Process = Button(
     app, 
     text="Process Running", 
@@ -533,7 +540,6 @@ Process = Button(
     pady = 100, 
     command=ProcessRunning
     ).grid(row = 1, column = 0,padx = 0, pady = 0, rowspan = 3)
-
 AppRun = Button(
     app, 
     text = "App Running", 
@@ -541,7 +547,6 @@ AppRun = Button(
     pady = 22, 
     command=AppRunning
     ).grid(row = 1, column = 1, columnspan = 2)
-
 Close = Button(
     app, 
     text="Tắt máy", 
