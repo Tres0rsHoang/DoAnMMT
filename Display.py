@@ -1,34 +1,124 @@
 from tkinter import *
-from tkinter import messagebox
+from tkinter import ttk
 from tkinter import filedialog
+global folder_path
 
-app = Tk()
-app.configure(bg='Black')
+newapp = Tk()
 
-app.title("My window, made with python")
-img = PhotoImage(file='icon.ico')
-app.tk.call('wm', 'iconphoto', app._w, img)
-app.geometry("600x400")
+newapp.geometry("500x400")
 
-name = Entry(app, width=50, bg="blue", fg="black",borderwidth=3)
-name.grid(row=1,column=0) #Khong de chung hang voi Entry
+newapp.title("registry")
 
-def BamVaoNut():
-	Ten = Label(app, text=name.get()).grid(row=2,column=0)
-def popup():
-	#showinfo, showwarning, showerror, askquestion, askokcancel, askyesno
-	CauTraLoi = messagebox.showwarning("Day la cai pop-up", "hahaha")
-	print(CauTraLoi)
-def File():
-	app.filename=filedialog.askopenfilename(initialdir="D:\\", title="Chon 1 file di nao", filetypes=(("png file","*.png"),("all file","*.*")))
-	TenFile = Label(app,text=app.filename).grid(row=2,column=0)
-def Them():
-	name.insert(0,"hihi ")
+linkfile = Entry(newapp, width=55)
+linkfile.grid(row=0, column=0, padx = 10)
 
-string = Label(app, text="Hihi", fg="#363636").grid(row=0, column=0, padx=10, pady=10)
-CaiNut = Button(app, text="Bam vao em di", padx=0, pady=0, command=BamVaoNut, fg="red", bg="yellow").grid(row=10,column=10)
-CaiNutTat = Button(app, text="Bam la tat",padx=0,pady=0,command=app.quit).grid(row=11,column=10)
-CaiNutBatPopUp = Button(app,text="Bam de bat cai Pop up", padx=0,pady=0,command=popup).grid(row=12,column=10)
-CaiNutChonFile = Button(app,text="Bam de chon file", padx=0,pady=0,command=File).grid(row=13,column=10)
-ThemChu = Button(app,text="Bam de them chu 'hihi' ", command=Them).grid(row=14,column=10)
-app.mainloop()
+def browse_button():
+    filename = filedialog.askdirectory()
+    folder_path.set(filename)
+    linkfile.insert(0, filename)
+
+folder_path = StringVar()
+
+linkfile = Entry(newapp, width=55)
+linkfile.grid(row=0, column=0, padx = 10)
+
+Browser = Button(newapp, text="Browser...", command=browse_button, padx = 28)
+Browser.grid(row=0, column=1, padx = 10)    
+ 
+txt = Entry(newapp)
+txt.grid(row=2, column=0, pady=10, ipady=30, ipadx=105)
+
+GuiNoiDung = Button(newapp, text="Gui noi dung", padx = 20, pady = 28)
+GuiNoiDung.grid(row=2, column=1, padx = 10)
+
+frame = LabelFrame(newapp, text="Sua gia tri truc tiep")
+frame.grid(row=3, columnspan = 4, padx = 0, pady = 0)
+
+option = [
+		"Get value",
+		"Set value",
+		"Delete value",
+		"Create key",
+		"Delete key"
+]
+
+option2 = [
+		"String",
+		"Binary",
+		"DWORD",
+		"QWORD",
+		"Multi-string",
+		"Expandable String"
+]
+
+
+
+def show(event):
+
+	Val = LabelFrame(frame)
+
+	Value2 = Entry(Val, width = 24)
+	Value2.insert(0, "Name value")
+	Value2.grid(row=0, column=0)
+
+	Value3 = Entry(Val, width = 25)
+	Value3.insert(0, "Value")
+	Value3.grid(row=0, column=1)
+
+	Value4 = ttk.Combobox(Val, value=option2)
+	Value4.insert(0, "Kiểu dữ liệu")
+	Value4.grid(row=0, column=2, padx=4)
+
+	Val.grid(row=5, padx=0, pady=0)
+
+	if SetValue.get() == "Get value":
+		Value2.destroy()
+		Value3.destroy()
+		Value4.destroy()
+
+		Value2 = Entry(frame, width = 24)
+		Value2.insert(0, "Name value")
+		Value2.grid(row=2, column=0, sticky = W)
+
+	elif SetValue.get() == "Set value":
+		Value2.destroy()
+		Value3.destroy()
+		Value4.destroy()
+
+		ValueS2 = Entry(frame, width = 24)
+		ValueS2.insert(0, "Name value")
+
+		ValueS3 = Entry(frame, width = 25)
+		ValueS3.insert(0, "Value")
+
+		ValueS4 = ttk.Combobox(frame, value=option2)
+		ValueS4.insert(0, "Kiểu dữ liệu")
+
+		ValueS3.grid(row=2, column=0, sticky = N)
+		ValueS4.grid(row=2, column=0, sticky = E, padx=4)
+	elif SetValue.get() == "Delete value":
+		Value3.destroy()
+		Value4.destroy()
+	elif SetValue.get() == "Create key":
+		Value2.destroy()
+
+
+SetValue = ttk.Combobox(frame, value=option)
+SetValue.insert(0, "Chọn chức năng")
+SetValue.bind("<<ComboboxSelected>>", show)
+SetValue.grid(row=0,column=0,ipadx=160, sticky=W)
+
+Value1 = Entry(frame, width=77)
+Value1.insert(0, "Đường dẫn")
+Value1.grid(row=1, column=0, pady=10)
+
+txt = Entry(frame)
+txt.grid(row=3, column=0, pady=10, ipady=30, ipadx=172)
+
+Gui = Button(frame, text="xẻ")
+Gui.grid(row=4, column=0, sticky=SW, ipadx = 30)
+
+Xoa = Button(frame, text="mổ")
+Xoa.grid(row=4, column=0, sticky=NE,ipadx = 30)
+
+newapp.mainloop()

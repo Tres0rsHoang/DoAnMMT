@@ -3,9 +3,18 @@ from tkinter import messagebox
 from Client import *
 import tkinter as tk
 import socket
+<<<<<<< HEAD
+from tkinter import filedialog
+import tkinter
+from PIL import ImageTk,Image
+from tkinter import ttk
+from tkinter import filedialog
+global folder_path
+=======
 from PIL import ImageTk,Image
 from tkinter import filedialog
 import tkinter
+>>>>>>> 7bbb7477f3cebdea1ebf6ba4b6296550b27e0a28
 
 HOST = '127.0.0.1'
 PORT = 1233
@@ -231,6 +240,7 @@ def ProcessRunning():
                 click = messagebox.showinfo("", "Đã diệt chương trình")
             except:
                 click = messagebox.showinfo("", "Không tìm thấy chương trình")
+<<<<<<< HEAD
 
         bKill = Button(
                 newWin2,
@@ -294,6 +304,71 @@ def ProcessRunning():
         command = PressXoaProcess
         ).grid(row = 0, column = 2, padx = 10)
 
+=======
+
+        bKill = Button(
+                newWin2,
+                text = "Kill",
+                padx = 20,
+                command = PressKill2Process
+            ).grid(row=0, column=4, padx=5, pady=5)
+    def PressStartProcess():
+        newWin3 = Tk()
+        newWin3.geometry("300x50")
+        newWin3.title("Start")
+        enterName = Entry(
+                newWin3,
+                width = 35
+            )
+        enterName.grid(
+                row=0,
+                column=0, 
+                columnspan = 3,
+                padx = 5,
+                pady = 5 
+            )
+        enterName.insert(END,"Nhập Tên")
+        def PressStartProcess():
+            Name = enterName.get()
+            client.sendall(bytes("Bat Process","utf8"))
+            try:
+                check = client.recv(1024).decode("utf8")
+                client.sendall(bytes(Name,"utf8"))
+                click = messagebox.showinfo("", "Chương trình đã bật")
+            except:
+                click = messagebox.showinfo("", "Không tìm thấy chương trình")
+
+        bStart = Button(
+                newWin3,
+                text = "Start",
+                padx = 20,
+                command = PressStartProcess
+            ).grid(row=0, column=4, padx=5, pady=5)
+
+    kill = Button(
+        newWin,
+        text = "Kill",
+        padx = 30, 
+        pady = 20,
+        command= PressKillProcess
+        ).grid(row = 0, column = 0, padx = 10)
+    Xem = Button(
+        newWin,
+        text = "Xem",
+        padx = 30, 
+        pady = 20,
+        command = PressXemProcess
+        ).grid(row = 0, column = 1, padx = 10)
+    
+    Xoa = Button(
+        newWin,
+        text =  "Xóa",
+        padx = 30, 
+        pady = 20,
+        command = PressXoaProcess
+        ).grid(row = 0, column = 2, padx = 10)
+
+>>>>>>> 7bbb7477f3cebdea1ebf6ba4b6296550b27e0a28
     Start = Button(
         newWin,
         text="Start",
@@ -348,10 +423,116 @@ def PrintScreen():
     but1.grid(row=1,column=1)
 
 def Registry(): 
-    newApp = Tk()
-    newApp.geometry("500x300")
-    newApp.title("Registry")
-    newApp = Label(newApp, text = "hi").grid(row = 0, column = 0)
+    newapp = Tk()
+
+    newapp.geometry("500x400")
+
+    newapp.title("registry")
+
+    linkfile = Entry(newapp, width=55)
+    linkfile.grid(row=0, column=0, padx = 10)
+
+    def browse_button():
+        filename = filedialog.askdirectory()
+        folder_path.set(filename)
+        linkfile.insert(0, filename)
+
+    folder_path = StringVar()
+
+    linkfile = Entry(newapp, width=55)
+    linkfile.grid(row=0, column=0, padx = 10)
+
+    Browser = Button(newapp, text="Browser...", command=browse_button, padx = 28)
+    Browser.grid(row=0, column=1, padx = 10)    
+     
+    txt = Entry(newapp)
+    txt.grid(row=2, column=0, pady=10, ipady=30, ipadx=105)
+
+    GuiNoiDung = Button(newapp, text="Gui noi dung", padx = 20, pady = 28)
+    GuiNoiDung.grid(row=2, column=1, padx = 10)
+
+    frame = LabelFrame(newapp, text="Sua gia tri truc tiep")
+    frame.grid(row=3, columnspan = 4, padx = 0, pady = 0)
+
+    option = [
+            "Get value",
+            "Set value",
+            "Delete value",
+            "Create key",
+            "Delete key"
+    ]
+
+    option2 = [
+            "String",
+            "Binary",
+            "DWORD",
+            "QWORD",
+            "Multi-string",
+            "Expandable String"
+    ]
+
+    def show(event):
+        if SetValue.get() == "Get value":
+            NameVal.grid_forget()
+            Value.grid_forget()
+            DuLieu.grid_forget()
+
+            NameVal.grid(row=2, column=0, sticky = W)
+
+        elif SetValue.get() == "Set value":
+            NameVal.grid_forget()
+            Value.grid_forget()
+            DuLieu.grid_forget()
+            
+            NameVal.grid(row=2, column=0, sticky = W)
+            Value.grid(row=2, column=0, sticky = N)
+            DuLieu.grid(row=2, column=0, sticky = E, padx=4)
+
+        elif SetValue.get() == "Delete value":
+            NameVal.grid_forget()
+            Value.grid_forget()
+            DuLieu.grid_forget()
+
+            NameVal.grid(row=2, column=0, sticky = W)
+        elif SetValue.get() == "Create key":
+            NameVal.grid_forget()
+            Value.grid_forget()
+            DuLieu.grid_forget()
+
+
+    SetValue = ttk.Combobox(frame, value=option)
+    SetValue.insert(0, "Chọn chức năng")
+    SetValue.bind("<<ComboboxSelected>>", show)
+    SetValue.grid(row=0,column=0,ipadx=160, sticky=W)
+
+    Đuongdan = Entry(frame, width=77)
+    Đuongdan.insert(0, "Đường dẫn")
+    Đuongdan.grid(row=1, column=0, pady=10)
+
+    NameVal = Entry(frame, width = 24)
+    NameVal.insert(0, "Name value")
+    NameVal.grid(row=2, column=0, sticky = W)
+
+    Value = Entry(frame, width = 25)
+    Value.insert(0, "Value")
+    Value.grid(row=2, column=0, sticky = N)
+
+    DuLieu = ttk.Combobox(frame, value=option2)
+    DuLieu.insert(0, "Kiểu dữ liệu")
+    DuLieu.grid(row=2, column=0, sticky = E, padx=4)
+
+    txt = Entry(frame)
+    txt.grid(row=3, column=0, pady=10, ipady=30, ipadx=172)
+
+    Gui = Button(frame, text="xẻ")
+    Gui.grid(row=4, column=0, sticky=SW, ipadx = 30)
+
+    Xoa = Button(frame, text="mổ")
+    Xoa.grid(row=4, column=0, sticky=NE,ipadx = 30)
+
+    newapp.mainloop()
+
+
 def Keystroke():
     size = 0
     string = ''
