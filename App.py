@@ -3,9 +3,12 @@ from tkinter import messagebox
 from Client import *
 import tkinter as tk
 import socket
-from PIL import ImageTk,Image
 from tkinter import filedialog
 import tkinter
+from PIL import ImageTk,Image
+from tkinter import ttk
+from tkinter import filedialog
+global folder_path
 
 HOST = '127.0.0.1'
 PORT = 1233
@@ -301,14 +304,12 @@ def ProcessRunning():
         pady = 20,
         command = PressStartProcess
     ).grid(row = 0, column = 3, padx = 10)
-
 def Close():
     connect = messagebox.askyesno("Tắt máy", "Bạn có muốn tắt máy")
     if connect == 1:
         client.sendall(bytes("Shutdown","utf8"))
     else:
-        return
-        
+        return        
 def PrintScreen(): 
     newApp = Toplevel()
     newApp.title("PrintScreen")
@@ -348,10 +349,132 @@ def PrintScreen():
     but1.grid(row=1,column=1)
 
 def Registry(): 
-    newApp = Tk()
-    newApp.geometry("500x300")
-    newApp.title("Registry")
-    newApp = Label(newApp, text = "hi").grid(row = 0, column = 0)
+    newapp = Tk()
+
+    newapp.geometry("500x400")
+
+    newapp.title("registry")
+
+    linkfile = Entry(newapp, width=55)
+    linkfile.grid(row=0, column=0, padx = 10)
+
+    FileShow = Entry(newapp)
+    FileShow.grid(row=2, column=0, pady=10, ipady=30, ipadx=105)
+
+    folder_path = StringVar()
+    link = ''
+
+    def browse_button():
+        nonlocal folder_path, link
+        filename = filedialog.askopenfilename()
+        folder_path.set(filename)
+        linkfile.insert(0, filename)
+        link = linkfile.get()
+        ReadFile = open(link,'r')
+        line = ReadFile.read()
+        FileShow.insert(0,line)
+
+    Browser = Button(newapp, text="Browser...", command=browse_button, padx = 28)
+    Browser.grid(row=0, column=1, padx = 10)    
+     
+    
+
+    def SendReg():
+        nonlocal link, FileShow
+        client.sendall(bytes("Nhan Reg", "utf8"))
+        check = client.recv(1024).decode("utf8")
+        ReadFile = open(link,'r')
+        line = ReadFile.read()
+        ReadFile.close()
+        client.sendall(bytes(line,"utf8"))
+        check = client.recv(1024).decode("utf8")
+
+
+    GuiNoiDung = Button(newapp, text="Gửi nội dung", command = SendReg, padx = 20, pady = 28)
+    GuiNoiDung.grid(row=2, column=1, padx = 10)
+
+    frame = LabelFrame(newapp, text="Sua gia tri truc tiep")
+    frame.grid(row=3, columnspan = 4, padx = 0, pady = 0)
+
+    option = [
+            "Get value",
+            "Set value",
+            "Delete value",
+            "Create key",
+            "Delete key"
+    ]
+
+    option2 = [
+            "String",
+            "Binary",
+            "DWORD",
+            "QWORD",
+            "Multi-string",
+            "Expandable String"
+    ]
+
+    def show(event):
+        if SetValue.get() == "Get value":
+            NameVal.grid_forget()
+            Value.grid_forget()
+            DuLieu.grid_forget()
+
+            NameVal.grid(row=2, column=0, sticky = W)
+
+        elif SetValue.get() == "Set value":
+            NameVal.grid_forget()
+            Value.grid_forget()
+            DuLieu.grid_forget()
+            
+            NameVal.grid(row=2, column=0, sticky = W)
+            Value.grid(row=2, column=0, sticky = N)
+            DuLieu.grid(row=2, column=0, sticky = E, padx=4)
+
+        elif SetValue.get() == "Delete value":
+            NameVal.grid_forget()
+            Value.grid_forget()
+            DuLieu.grid_forget()
+
+            NameVal.grid(row=2, column=0, sticky = W)
+        elif SetValue.get() == "Create key":
+            NameVal.grid_forget()
+            Value.grid_forget()
+            DuLieu.grid_forget()
+
+
+    SetValue = ttk.Combobox(frame, value=option)
+    SetValue.insert(0, "Chọn chức năng")
+    SetValue.bind("<<ComboboxSelected>>", show)
+    SetValue.grid(row=0,column=0,ipadx=160, sticky=W)
+
+    Đuongdan = Entry(frame, width=77)
+    Đuongdan.insert(0, "Đường dẫn")
+    Đuongdan.grid(row=1, column=0, pady=10)
+
+    NameVal = Entry(frame, width = 24)
+    NameVal.insert(0, "Name value")
+    NameVal.grid(row=2, column=0, sticky = W)
+
+    Value = Entry(frame, width = 25)
+    Value.insert(0, "Value")
+    Value.grid(row=2, column=0, sticky = N)
+
+    DuLieu = ttk.Combobox(frame, value=option2)
+    DuLieu.insert(0, "Kiểu dữ liệu")
+    DuLieu.grid(row=2, column=0, sticky = E, padx=4)
+
+    NoficationShow = Label(frame)
+    NoficationShow.grid(row=3, column=0, pady=10, ipady=30, ipadx=172)
+
+    Gui = Button(frame, text="xẻ")
+    Gui.grid(row=4, column=0, sticky=SW, ipadx = 30)
+
+    Xoa = Button(frame, text="mổ")
+    Xoa.grid(row=4, column=0, sticky=NE,ipadx = 30)
+
+    newapp.mainloop()
+
+
 def Keystroke():
     size = 0
     string = ''
@@ -398,7 +521,6 @@ def Keystroke():
     unHook = Button(newApp, text = "Unhook", padx = 20, pady = 20, command = unhook).grid(row = 0,column = 1) 
     inphim = Button(newApp, text = "In phím", padx = 20, pady = 20,command = xem).grid(row = 0,column = 2)
     xoa = Button(newApp, text = "Xóa", padx = 20, pady = 20,command=xoa).grid(row = 0,column = 3)
-
 def Quit():
     click = messagebox.askyesno("Quit?", "Bạn chắc chắn muốn thoát")
     if click == 1:
@@ -426,7 +548,6 @@ Ketnoi = Button(
     pady = 15, 
     command=NewWindow
     ).grid(row = 0, column = 3)
-
 Process = Button(
     app, 
     text="Process Running", 
@@ -434,7 +555,6 @@ Process = Button(
     pady = 100, 
     command=ProcessRunning
     ).grid(row = 1, column = 0,padx = 0, pady = 0, rowspan = 3)
-
 AppRun = Button(
     app, 
     text = "App Running", 
@@ -442,7 +562,6 @@ AppRun = Button(
     pady = 22, 
     command=AppRunning
     ).grid(row = 1, column = 1, columnspan = 2)
-
 Close = Button(
     app, 
     text="Tắt máy", 

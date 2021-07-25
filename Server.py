@@ -227,7 +227,6 @@ def Server_Running():
         for i in range(size):
             client.sendall(bytes(list_thread[i], "utf8"))
             check = client.recv(1024)
-
     def Process_running_kill(ID_App):
         import subprocess
         cmd = 'powershell taskkill /F /PID ' + ID_App
@@ -244,6 +243,16 @@ def Server_Running():
             return 1
         except:
             return 0
+    def NhanReg():
+        data = client.recv(1024).decode("utf8")
+        client.sendall(bytes("Ok Nhan Reg","utf8"))
+        writefile = open("test2.reg","w")
+        writefile.write(data)
+        import subprocess    
+        cmd = 'powershell"reg import test2.reg"'
+        proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+        print(data)
+
 
     #Command cho server:
     while True:
@@ -266,6 +275,7 @@ def Server_Running():
             elif i == "Bat Process":
                 Process_Name = client.recv(1024).decode("utf8")
                 Process_start(Process_Name)
+            elif i == "Nhan Reg": NhanReg()
 
         Command = client.recv(1024).decode("utf8")
         client.sendall(bytes("Da nhan lenh","utf8"))
