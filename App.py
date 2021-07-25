@@ -464,8 +464,17 @@ def Registry():
     def PressGui():
         if SetValue.get() == "Get value":
             client.sendall(bytes("Get value reg","utf8"))
+            check = client.recv(1024).decode("utf8")
             Name = NameVal.get()
             Link = DuongDan.get()
+            client.sendall(bytes(Name,"utf8"))
+            check = client.recv(1024).decode("utf8")
+            client.sendall(bytes(Link,"utf8"))
+            check = client.recv(1024).decode("utf8")
+            data = Recieve_Reg_Value(client)
+            
+
+
 
 
     HaiNut = Frame(frame)

@@ -252,8 +252,42 @@ def Server_Running():
         import subprocess    
         cmd = 'powershell reg import test2.reg'
         subprocess.Popen(cmd, shell=True)
-    #def LayRegValue():
-
+    def LayRegValue():
+        import winreg
+        Name = client.recv(1024).decode("utf8")
+        client.sendall(bytes("Ok Nhan Name","utf8"))
+        Link = client.recv(1024).decode("utf8")
+        client.sendall(bytes("Ok Nhan Link","utf8"))
+        hkey = Link.split("\\",2)
+        print(hkey[0])
+        print(hkey[1])
+        
+        if hkey[0] == "HKEY_CLASSES_ROOT":
+            keylink = winreg.HKEY_CLASSES_ROOT
+        elif hkey[0] == "HKEY_CURRENT_USER":
+            keylink = winreg.HKEY_CURRENT_USER
+        elif hkey[0] == "HKEY_LOCAL_MACHINE":
+            keylink = winreg.HKEY_LOCAL_MACHINE
+        elif hkey[0] == "HKEY_USERS":
+            keylink = winreg.HKEY_USERS
+        elif hkey[0] == "HKEY_CURRENT_CONFIG":
+            keylink = winreg.HKEY_CURRENT_CONFIG
+        with winreg.ConnectRegistry(None, keylink) as winKey:
+            with winreg.OpenKey(winKey, hkey[1], 0, winreg.KEY_ALL_ACCESS) as sub_key:
+                i = 0
+                while True:
+                    try:
+                        value = winreg.EnumValue(sub_key, i)
+                        if value[0] == Name: 
+                            client.sendall(bytes(value[1],"utf8"))
+                            check = client.recv(1024).decode("utf8")
+                            break
+                        i+=1
+                    except:
+                        client.sendall(bytes("Khong tim thay", "utf8"))
+                        check = client.recv(1024).decode("utf8")
+                        break
+        
     #Command cho server:
     while True:
         #try:
