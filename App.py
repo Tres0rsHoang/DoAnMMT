@@ -358,10 +358,12 @@ def Keystroke():
     newApp = Tk()
     newApp.geometry("500x300")
     newApp.title("Keystroke")  
-    e = Entry(newApp, width = 55,)
-    e.grid(row = 1, column = 0,columnspan= 4)
+    table = Frame(newApp, padx=20, pady = 20, borderwidth=5)
+    table.grid(row=1,column=0)
+    e = Entry(newApp, width = 55)
+    e.grid(row = 1, column = 0,ipadx=10, ipady=100,columnspan= 4)
     unhook_press = False
-    hook = false
+    hook = False
     def hook():
         nonlocal unhook_press, hook
         hook = True
