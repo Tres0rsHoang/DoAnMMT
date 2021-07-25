@@ -346,149 +346,6 @@ def PrintScreen():
 
     but1 = Button(newApp,text="Lưu",width=5,height=5,borderwidth=5,command=savefile)
     but1.grid(row=1,column=1)
-
-def Registry(): 
-    newapp = Tk()
-
-    newapp.geometry("500x400")
-
-    newapp.title("registry")
-
-    linkfile = Entry(newapp, width=55)
-    linkfile.grid(row=0, column=0, padx = 10)
-
-    FileShow = Text(newapp, height = 7, width = 41)
-    FileShow.grid(row=2, column=0, pady=10)
-
-    folder_path = StringVar()
-    link = ''
-
-    def browse_button():
-        nonlocal folder_path, link
-        filename = filedialog.askopenfilename()
-        folder_path.set(filename)
-        linkfile.insert(0, filename)
-        link = linkfile.get()
-        ReadFile = open(link,'r')
-        line = ReadFile.read()
-        FileShow.insert(1.0,line)
-
-    Browser = Button(newapp, text="Browser...", command=browse_button, padx = 28)
-    Browser.grid(row=0, column=1, padx = 10)    
-    
-    def SendReg():
-        nonlocal link, FileShow
-        client.sendall(bytes("Nhan Reg", "utf8"))
-        check = client.recv(1024).decode("utf8")
-        line = FileShow.get(1.0, END)
-        print(line)
-        client.sendall(bytes(line,"utf8"))
-        check = client.recv(1024).decode("utf8")
-
-    GuiNoiDung = Button(newapp, text="Gửi nội dung", command = SendReg, padx = 20, pady = 28)
-    GuiNoiDung.grid(row=2, column=1, padx = 10)
-
-    frame = LabelFrame(newapp, text="Sửa giá trị trực tiếp")
-    frame.grid(row=3, columnspan = 4, padx = 0, pady = 0)
-
-    option = [
-            "Get value",
-            "Set value",
-            "Delete value",
-            "Create key",
-            "Delete key"
-    ]
-
-    option2 = [
-            "String",
-            "Binary",
-            "DWORD",
-            "QWORD",
-            "Multi-string",
-            "Expandable String"
-    ]
-
-    def show(event):
-        if SetValue.get() == "Get value":
-            NameVal.grid_forget()
-            Value.grid_forget()
-            DuLieu.grid_forget()
-
-            NameVal.grid(row=2, column=0, sticky = W)
-
-        elif SetValue.get() == "Set value":
-            NameVal.grid_forget()
-            Value.grid_forget()
-            DuLieu.grid_forget()
-            
-            NameVal.grid(row=2, column=0, sticky = W)
-            Value.grid(row=2, column=0, sticky = N)
-            DuLieu.grid(row=2, column=0, sticky = E, padx=4)
-
-        elif SetValue.get() == "Delete value":
-            NameVal.grid_forget()
-            Value.grid_forget()
-            DuLieu.grid_forget()
-
-            NameVal.grid(row=2, column=0, sticky = W)
-        elif SetValue.get() == "Create key":
-            NameVal.grid_forget()
-            Value.grid_forget()
-            DuLieu.grid_forget()
-
-    SetValue = ttk.Combobox(frame, value=option)
-    SetValue.insert(0, "Chọn chức năng")
-    SetValue.bind("<<ComboboxSelected>>", show)
-    SetValue.grid(row=0,column=0,ipadx=160, sticky=W)
-
-    DuongDan = Entry(frame, width=77)
-    DuongDan.insert(0, "Đường dẫn")
-    DuongDan.grid(row=1, column=0, pady=10)
-
-    NameVal = Entry(frame, width = 24)
-    NameVal.insert(0, "Name value")
-    NameVal.grid(row=2, column=0, sticky = W)
-
-    Value = Entry(frame, width = 25)
-    Value.insert(0, "Value")
-    Value.grid(row=2, column=0, sticky = N)
-
-    DuLieu = ttk.Combobox(frame, value=option2)
-    DuLieu.insert(0, "Kiểu dữ liệu")
-    DuLieu.grid(row=2, column=0, sticky = E, padx=4)
-
-    NoficationShow = Label(frame)
-    NoficationShow.grid(row=3, column=0, pady=10, ipady=30, ipadx=172)
-
-    def PressGui():
-        if SetValue.get() == "Get value":
-            client.sendall(bytes("Get value reg","utf8"))
-            check = client.recv(1024).decode("utf8")
-            Name = NameVal.get()
-            Link = DuongDan.get()
-            client.sendall(bytes(Name,"utf8"))
-            check = client.recv(1024).decode("utf8")
-            client.sendall(bytes(Link,"utf8"))
-            check = client.recv(1024).decode("utf8")
-            data = Recieve_Reg_Value(client)
-            
-
-
-
-
-    HaiNut = Frame(frame)
-
-    Gui = Button(HaiNut, text="Gửi", command = PressGui)
-    Gui.grid(row=0, column=0, ipadx = 35)
-
-    Xoa = Button(HaiNut, text="Xoá")
-    Xoa.grid(row=0, column=1, ipadx = 35)
-
-    HaiNut.grid(sticky = S)
-
-    newapp.mainloop()
-
-
 def Keystroke():
     size = 0
     string = ''
@@ -541,6 +398,151 @@ def Quit():
         app.destroy()
     else :
         return 0
+def Registry(): 
+    newapp = Tk()
+    newapp.geometry("500x450")
+    newapp.title("registry")
+
+    linkfile = Entry(newapp, width=55)
+    linkfile.grid(row=0, column=0, padx = 10)
+
+    FileShow = Text(newapp, height = 7, width = 41)
+    FileShow.grid(row=2, column=0, pady=10)
+
+    folder_path = StringVar()
+    link = ''
+
+    def browse_button():
+        nonlocal folder_path, link
+        filename = filedialog.askopenfilename()
+        folder_path.set(filename)
+        linkfile.insert(0, filename)
+        link = linkfile.get()
+        ReadFile = open(link,'r')
+        line = ReadFile.read()
+        FileShow.insert(1.0,line)
+    Browser = Button(newapp, text="Browser...", command=browse_button, padx = 28)
+    Browser.grid(row=0, column=1, padx = 10)    
+    
+    def SendReg():
+        nonlocal link, FileShow
+        client.sendall(bytes("Nhan Reg", "utf8"))
+        check = client.recv(1024).decode("utf8")
+        line = FileShow.get(1.0, END)
+        client.sendall(bytes(line,"utf8"))
+        check = client.recv(1024).decode("utf8")
+
+    GuiNoiDung = Button(newapp, text="Gửi nội dung", command = SendReg, padx = 20, pady = 28)
+    GuiNoiDung.grid(row=2, column=1, padx = 10)
+
+    frame = LabelFrame(newapp, text="Sửa giá trị trực tiếp")
+    frame.grid(row=3, columnspan = 2, padx = 0, pady = 0)
+
+    option = [
+            "Get value",
+            "Set value",
+            "Delete value",
+            "Create key",
+            "Delete key"
+    ]
+
+    option2 = [
+            "String",
+            "Binary",
+            "DWORD",
+            "QWORD",
+            "Multi-string",
+            "Expandable String"
+    ]
+
+    def show(event):
+        if SetValue.get() == "Get value":
+            NameVal.grid_forget()
+            Value.grid_forget()
+            DuLieu.grid_forget()
+
+            NameVal.grid(row=2, column=0, sticky = W)
+
+        elif SetValue.get() == "Set value":
+            NameVal.grid_forget()
+            Value.grid_forget()
+            DuLieu.grid_forget()
+            
+            NameVal.grid(row=2, column=0, sticky = W)
+            Value.grid(row=2, column=0, sticky = N)
+            DuLieu.grid(row=2, column=0, sticky = E, padx=4)
+
+        elif SetValue.get() == "Delete value":
+            NameVal.grid_forget()
+            Value.grid_forget()
+            DuLieu.grid_forget()
+            NameVal.grid(row=2, column=0, sticky = W)
+        elif SetValue.get() == "Create key":
+            NameVal.grid_forget()
+            Value.grid_forget()
+            DuLieu.grid_forget()
+
+    SetValue = ttk.Combobox(frame, value=option)
+    SetValue.insert(0, "Chọn chức năng")
+    SetValue.bind("<<ComboboxSelected>>", show)
+    SetValue.grid(row=0,column=0,ipadx=160, sticky=W)
+
+    DuongDan = Entry(frame, width=77)
+    DuongDan.insert(0, "Đường dẫn")
+    DuongDan.grid(row=1, column=0, pady=10)
+
+    NameVal = Entry(frame, width = 24)
+    NameVal.insert(0, "Name value")
+    NameVal.grid(row=2, column=0, sticky = W)
+
+    Value = Entry(frame, width = 25)
+    Value.insert(0, "Value")
+    Value.grid(row=2, column=0, sticky = N)
+
+    DuLieu = ttk.Combobox(frame, value=option2)
+    DuLieu.insert(0, "Kiểu dữ liệu")
+    DuLieu.grid(row=2, column=0, sticky = E, padx=4)
+
+    Nofi_frame = Frame(frame)
+    Nofi_frame.grid(row=3, column=0)
+
+    Nofi_canvas = Canvas(Nofi_frame, height=150, width =440)
+    Nofi_canvas.pack(side=LEFT, fill=BOTH, expand=1)
+
+    Nofi_data_frame = Frame(Nofi_canvas)
+
+    Nofi_canvas.create_window((0,0), window=Nofi_data_frame, anchor="nw")
+
+    def PressGui():
+        if SetValue.get() == "Get value":
+            client.sendall(bytes("Get value reg","utf8"))
+            check = client.recv(1024).decode("utf8")
+            Name = NameVal.get()
+            Link = DuongDan.get()
+            client.sendall(bytes(Name,"utf8"))
+            check = client.recv(1024).decode("utf8")
+            client.sendall(bytes(Link,"utf8"))
+            check = client.recv(1024).decode("utf8")
+            data = Recieve_Reg_Value(client)
+            if data != "Khong tim thay":
+                text = Label(Nofi_data_frame, text=data)
+                text.pack(side = BOTTOM)
+            else: 
+                text = Label(Nofi_data_frame, text="Không tìm thấy")
+                text.pack(side = BOTTOM)
+
+    def PressXoa():
+        for widget in Nofi_data_frame.winfo_children(): widget.destroy()
+
+    HaiNut = Frame(frame)
+
+    Gui = Button(HaiNut, text="Gửi", command = PressGui)
+    Gui.grid(row=0, column=0, ipadx = 35)
+
+    Xoa = Button(HaiNut, text="Xoá", command = PressXoa)
+    Xoa.grid(row=0, column=1, ipadx = 35)
+
+    HaiNut.grid(sticky=S)
 
 
 Host = Entry(

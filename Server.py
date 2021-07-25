@@ -9,7 +9,7 @@ def Server_Running():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((HOST, PORT))
     server.listen(2)
-    print(HOST,PORT)
+    print(HOST+':'+str(PORT))
     client, addr = server.accept()
     print('Connected by', addr)
 
@@ -259,9 +259,6 @@ def Server_Running():
         Link = client.recv(1024).decode("utf8")
         client.sendall(bytes("Ok Nhan Link","utf8"))
         hkey = Link.split("\\",2)
-        print(hkey[0])
-        print(hkey[1])
-        
         if hkey[0] == "HKEY_CLASSES_ROOT":
             keylink = winreg.HKEY_CLASSES_ROOT
         elif hkey[0] == "HKEY_CURRENT_USER":
