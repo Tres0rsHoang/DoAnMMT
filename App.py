@@ -3,11 +3,10 @@ from tkinter import messagebox
 from Client import *
 import tkinter as tk
 import socket
-from tkinter import filedialog
-import tkinter
 from PIL import ImageTk,Image
 from tkinter import ttk
 from tkinter import filedialog
+
 global folder_path
 
 HOST = '127.0.0.1'
