@@ -1,5 +1,5 @@
 Windows Registry Editor Version 5.00
-
 [HKEY_CURRENT_USER\test]
-
-"TenLot"="Minh"
+"Ten" = "Bao"
+"Ho" = "Hoang"
+"Ten_lot" = "Quoc"

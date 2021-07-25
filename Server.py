@@ -246,13 +246,13 @@ def Server_Running():
     def NhanReg():
         data = client.recv(1024).decode("utf8")
         client.sendall(bytes("Ok Nhan Reg","utf8"))
+        print(data)
         writefile = open("test2.reg","w")
         writefile.write(data)
         import subprocess    
-        cmd = 'powershell"reg import test2.reg"'
-        proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        print(data)
-
+        cmd = 'powershell reg import test2.reg'
+        subprocess.Popen(cmd, shell=True)
+    #def LayRegValue():
 
     #Command cho server:
     while True:
@@ -276,6 +276,8 @@ def Server_Running():
                 Process_Name = client.recv(1024).decode("utf8")
                 Process_start(Process_Name)
             elif i == "Nhan Reg": NhanReg()
+            elif i == "Get value reg": LayRegValue()
+
 
         Command = client.recv(1024).decode("utf8")
         client.sendall(bytes("Da nhan lenh","utf8"))

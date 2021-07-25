@@ -358,8 +358,8 @@ def Registry():
     linkfile = Entry(newapp, width=55)
     linkfile.grid(row=0, column=0, padx = 10)
 
-    FileShow = Entry(newapp)
-    FileShow.grid(row=2, column=0, pady=10, ipady=30, ipadx=105)
+    FileShow = Text(newapp, height = 7, width = 41)
+    FileShow.grid(row=2, column=0, pady=10)
 
     folder_path = StringVar()
     link = ''
@@ -372,28 +372,24 @@ def Registry():
         link = linkfile.get()
         ReadFile = open(link,'r')
         line = ReadFile.read()
-        FileShow.insert(0,line)
+        FileShow.insert(1.0,line)
 
     Browser = Button(newapp, text="Browser...", command=browse_button, padx = 28)
     Browser.grid(row=0, column=1, padx = 10)    
-     
     
-
     def SendReg():
         nonlocal link, FileShow
         client.sendall(bytes("Nhan Reg", "utf8"))
         check = client.recv(1024).decode("utf8")
-        ReadFile = open(link,'r')
-        line = ReadFile.read()
-        ReadFile.close()
+        line = FileShow.get(1.0, END)
+        print(line)
         client.sendall(bytes(line,"utf8"))
         check = client.recv(1024).decode("utf8")
-
 
     GuiNoiDung = Button(newapp, text="Gửi nội dung", command = SendReg, padx = 20, pady = 28)
     GuiNoiDung.grid(row=2, column=1, padx = 10)
 
-    frame = LabelFrame(newapp, text="Sua gia tri truc tiep")
+    frame = LabelFrame(newapp, text="Sửa giá trị trực tiếp")
     frame.grid(row=3, columnspan = 4, padx = 0, pady = 0)
 
     option = [
@@ -441,15 +437,14 @@ def Registry():
             Value.grid_forget()
             DuLieu.grid_forget()
 
-
     SetValue = ttk.Combobox(frame, value=option)
     SetValue.insert(0, "Chọn chức năng")
     SetValue.bind("<<ComboboxSelected>>", show)
     SetValue.grid(row=0,column=0,ipadx=160, sticky=W)
 
-    Đuongdan = Entry(frame, width=77)
-    Đuongdan.insert(0, "Đường dẫn")
-    Đuongdan.grid(row=1, column=0, pady=10)
+    DuongDan = Entry(frame, width=77)
+    DuongDan.insert(0, "Đường dẫn")
+    DuongDan.grid(row=1, column=0, pady=10)
 
     NameVal = Entry(frame, width = 24)
     NameVal.insert(0, "Name value")
@@ -466,11 +461,22 @@ def Registry():
     NoficationShow = Label(frame)
     NoficationShow.grid(row=3, column=0, pady=10, ipady=30, ipadx=172)
 
-    Gui = Button(frame, text="xẻ")
-    Gui.grid(row=4, column=0, sticky=SW, ipadx = 30)
+    def PressGui():
+        if SetValue.get() == "Get value":
+            client.sendall(bytes("Get value reg","utf8"))
+            Name = NameVal.get()
+            Link = DuongDan.get()
 
-    Xoa = Button(frame, text="mổ")
-    Xoa.grid(row=4, column=0, sticky=NE,ipadx = 30)
+
+    HaiNut = Frame(frame)
+
+    Gui = Button(HaiNut, text="Gửi", command = PressGui)
+    Gui.grid(row=0, column=0, ipadx = 35)
+
+    Xoa = Button(HaiNut, text="Xoá")
+    Xoa.grid(row=0, column=1, ipadx = 35)
+
+    HaiNut.grid(sticky = S)
 
     newapp.mainloop()
 
