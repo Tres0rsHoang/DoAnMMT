@@ -531,6 +531,34 @@ def Registry():
             else: 
                 text = Label(Nofi_data_frame, text="Không tìm thấy")
                 text.pack(side = BOTTOM)
+        elif SetValue.get() == "Set value":
+            client.sendall(bytes("Set registry value","utf8"))
+            check = client.recv(1024).decode("utf8")
+            Name = NameVal.get()
+            Link = DuongDan.get()
+            client.sendall(bytes(Name,"utf8"))
+            check = client.recv(1024).decode("utf8")
+            client.sendall(bytes(Link,"utf8"))
+            check = client.recv(1024).decode("utf8")
+            data_type = DuLieu.get()
+            client.sendall(bytes(data_type, "utf8"))
+            check = client.recv(1024).decode("utf8")
+            value = Value.get()
+            client.sendall(bytes(value,"utf8"))
+            check = client.recv(1024).decode("utf8")
+
+            status = client.recv(1024).decode("utf8")
+            client.sendall(bytes("ok", "utf8"))
+            print(status)
+            if status == "succeed":
+                text = Label(Nofi_data_frame, text="Set value successfully")
+                text.pack(side = BOTTOM)
+            elif status == "Sai duong dan":
+                text = Label(Nofi_data_frame, text="Sai đường dẫn")
+                text.pack(side = BOTTOM)
+            else:   
+                text = Label(Nofi_data_frame, text="Lỗi")
+                text.pack(side = BOTTOM)
 
     def PressXoa():
         for widget in Nofi_data_frame.winfo_children(): widget.destroy()
