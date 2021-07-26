@@ -287,13 +287,6 @@ def Server_Running():
                                 client.sendall(bytes(value[1],"utf8"))
                                 check = client.recv(1024).decode("utf8")
                                 break
-<<<<<<< HEAD
-                except:
-                    client.sendall(bytes("Sai đường dẫn", "utf8"))
-                    check = client.recv(1024).decode("utf8")
-    
-=======
-                            i+=1
                         except:
                             client.sendall(bytes("Khong tim thay", "utf8"))
                             check = client.recv(1024).decode("utf8")
@@ -313,7 +306,7 @@ def Server_Running():
         value = client.recv(2048).decode("utf8")
         client.sendall(bytes("Value recieved","utf8"))
 
-        hkey = Link.split("\\",2)
+        hkey = Link.split("\\", 1)
         check= True
         if hkey[0] == "HKEY_CLASSES_ROOT":
             keylink = winreg.HKEY_CLASSES_ROOT
@@ -329,15 +322,15 @@ def Server_Running():
             client.sendall(bytes("Sai duong dan", "utf8"))
             check = client.recv(1024).decode("utf8")
             return
-        if data_type == "Kiểu dữ liệu": 
-            client.sendall(bytes("fail", "utf8"))
-            check = client.recv(1024).decode("utf8")
-            return
 
         with winreg.ConnectRegistry(None, keylink) as winKey:
             try:
                 with winreg.OpenKey(winKey, hkey[1], 0, winreg.KEY_ALL_ACCESS) as sub_key:
-                    if data_type == "String": 
+                    if data_type == "Kiểu dữ liệu": 
+                        client.sendall(bytes("fail", "utf8"))
+                        check = client.recv(1024).decode("utf8")
+                        return
+                    elif data_type == "String": 
                         winreg.SetValueEx(sub_key, Name, 0, winreg.REG_SZ,value)
                     elif data_type == "Binary": 
                         winreg.SetValueEx(sub_key, Name, 0, winreg.REG_BINARY,value.encode('latin-1'))
@@ -353,11 +346,10 @@ def Server_Running():
                     client.sendall(bytes("succeed", "utf8"))
                     check = client.recv(1024).decode("utf8")  
             except:
-                client.sendall(bytes("Sai đường dẫn", "utf8"))
+                client.sendall(bytes("Sai duong dan", "utf8"))
                 check = client.recv(1024).decode("utf8")
                   
         
->>>>>>> f21da62156f2c8ea0c4d0842f9edde5739280c04
     #Command cho server:
     while True:
         #try:
