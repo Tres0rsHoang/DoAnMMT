@@ -411,7 +411,6 @@ def Registry():
 
     folder_path = StringVar()
     link = ''
-
     def browse_button():
         nonlocal folder_path, link
         filename = filedialog.askopenfilename()
@@ -422,10 +421,8 @@ def Registry():
         ReadFile = open(link,'r')
         line = ReadFile.read()
         FileShow.insert(1.0,line)
-
     Browser = Button(newapp, text="Browser...", command=browse_button, padx = 28)
-    Browser.grid(row=0, column=1, padx = 10)    
-    
+    Browser.grid(row=0, column=1, padx = 10)       
     def SendReg():
         nonlocal link, FileShow
         client.sendall(bytes("Nhan Reg", "utf8"))
@@ -434,10 +431,8 @@ def Registry():
         line = FileShow.get(1.0,END)
         client.sendall(bytes(line,"utf8"))
         check = client.recv(1024).decode("utf8")
-
     GuiNoiDung = Button(newapp, text="Gửi nội dung", command = SendReg, padx = 20, pady = 28)
     GuiNoiDung.grid(row=2, column=1, padx = 10)
-
     frame = LabelFrame(newapp, text="Sửa giá trị trực tiếp")
     frame.grid(row=3, columnspan = 2, padx = 0, pady = 0)
 
@@ -447,7 +442,7 @@ def Registry():
             "Delete value",
             "Create key",
             "Delete key"
-    ]
+        ]
 
     option2 = [
             "String",
@@ -456,7 +451,7 @@ def Registry():
             "QWORD",
             "Multi-string",
             "Expandable String"
-    ]
+        ]
 
     def show(event):
         if SetValue.get() == "Get value":
@@ -465,7 +460,6 @@ def Registry():
             DuLieu.grid_forget()
 
             NameVal.grid(row=2, column=0, sticky = W)
-
         elif SetValue.get() == "Set value":
             NameVal.grid_forget()
             Value.grid_forget()
@@ -474,16 +468,23 @@ def Registry():
             NameVal.grid(row=2, column=0, sticky = W)
             Value.grid(row=2, column=0, sticky = N)
             DuLieu.grid(row=2, column=0, sticky = E, padx=4)
-
         elif SetValue.get() == "Delete value":
             NameVal.grid_forget()
             Value.grid_forget()
             DuLieu.grid_forget()
             NameVal.grid(row=2, column=0, sticky = W)
+
         elif SetValue.get() == "Create key":
             NameVal.grid_forget()
             Value.grid_forget()
             DuLieu.grid_forget()
+
+        elif SetValue.get() == "Delete key":
+            NameVal.grid_forget()
+            Value.grid_forget()
+            DuLieu.grid_forget()
+
+
 
     SetValue = ttk.Combobox(frame, value=option)
     SetValue.insert(0, "Chọn chức năng")
@@ -561,6 +562,35 @@ def Registry():
                 text.pack(side = BOTTOM)
             else:   
                 text = Label(Nofi_data_frame, text="Lỗi")
+                text.pack(side = BOTTOM)
+
+        elif SetValue.get() == "Create key":
+            client.sendall(bytes("Create key reg","utf8"))
+            check = client.recv(1024).decode("utf8")
+            Link = DuongDan.get()
+            client.sendall(bytes(Link,"utf8"))
+            check = client.recv(1024).decode("utf8")
+            data = client.recv(1024).decode("utf8")
+            client.sendall(bytes("Da nhan","utf8"))
+            if data == "Da tao thanh cong":
+                text = Label(Nofi_data_frame, text="Đã tạo thành công")
+                text.pack(side = BOTTOM)          
+            else: 
+                text = Label(Nofi_data_frame, text="Sai đường dẫn")
+        elif SetValue.get() == "Delete key":
+            client.sendall(bytes("Delete key","utf8"))
+            check = client.recv(1024).decode("utf8")
+            Link = DuongDan.get()
+            client.sendall(bytes(Link,"utf8"))
+            check = client.recv(1024).decode("utf8")
+            data = client.recv(1024).decode("utf8")
+            client.sendall(bytes("Da nhan","utf8"))
+
+            if data == "Da xoa thanh cong":
+                text = Label(Nofi_data_frame, text="Đã xoá thành công")
+                text.pack(side = BOTTOM)          
+            else: 
+                text = Label(Nofi_data_frame, text="Sai đường dẫn")
                 text.pack(side = BOTTOM)
 
     def PressXoa():

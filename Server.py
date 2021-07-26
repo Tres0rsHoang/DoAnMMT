@@ -287,12 +287,6 @@ def Server_Running():
                                 client.sendall(bytes(value[1],"utf8"))
                                 check = client.recv(1024).decode("utf8")
                                 break
-<<<<<<< HEAD
-                except:
-                    client.sendall(bytes("Sai đường dẫn", "utf8"))
-                    check = client.recv(1024).decode("utf8")
-    
-=======
                             i+=1
                         except:
                             client.sendall(bytes("Khong tim thay", "utf8"))
@@ -301,7 +295,6 @@ def Server_Running():
             except:
                 client.sendall(bytes("Sai đường dẫn", "utf8"))
                 check = client.recv(1024).decode("utf8")
-
     def SetValue():
         import winreg
         Name = client.recv(1024).decode("utf8")
@@ -355,9 +348,80 @@ def Server_Running():
             except:
                 client.sendall(bytes("Sai đường dẫn", "utf8"))
                 check = client.recv(1024).decode("utf8")
-                  
+    def Createkey():
+        import winreg
+
+        Link = client.recv(1024).decode("utf8")
+        client.sendall(bytes("Ok Nhan Link","utf8"))
+        hkey = Link.split("\\",1)
+
+        if hkey[0] == "HKEY_CLASSES_ROOT":
+            keylink = winreg.HKEY_CLASSES_ROOT
+        elif hkey[0] == "HKEY_CURRENT_USER":
+            keylink = winreg.HKEY_CURRENT_USER
+        elif hkey[0] == "HKEY_LOCAL_MACHINE":
+            keylink = winreg.HKEY_LOCAL_MACHINE
+        elif hkey[0] == "HKEY_USERS":
+            keylink = winreg.HKEY_USERS
+        elif hkey[0] == "HKEY_CURRENT_CONFIG":
+            keylink = winreg.HKEY_CURRENT_CONFIG
+        else:
+            client.sendall(bytes("Sai duong dan", "utf8"))
+            check = client.recv(1024).decode("utf8")
+            return
+
+        cn = winreg.ConnectRegistry(None, keylink)
+        ok = winreg.OpenKey(cn, r"",0,winreg.KEY_ALL_ACCESS)    
+        ck = winreg.CreateKeyEx(ok, hkey[1], 0, winreg.KEY_ALL_ACCESS)
+        client.sendall(bytes("Da tao thanh cong","utf8"))
+        check = client.recv(1024).decode("utf8")
+    def Deletekey():
+        import winreg
+
+        Link = client.recv(1024).decode("utf8")
+        client.sendall(bytes("Ok Nhan Link","utf8"))
+        hkey = Link.split("\\",1)
         
->>>>>>> f21da62156f2c8ea0c4d0842f9edde5739280c04
+        if hkey[0] == "HKEY_CLASSES_ROOT":
+            keylink = winreg.HKEY_CLASSES_ROOT
+        elif hkey[0] == "HKEY_CURRENT_USER":
+            keylink = winreg.HKEY_CURRENT_USER
+        elif hkey[0] == "HKEY_LOCAL_MACHINE":
+            keylink = winreg.HKEY_LOCAL_MACHINE
+        elif hkey[0] == "HKEY_USERS":
+            keylink = winreg.HKEY_USERS
+        elif hkey[0] == "HKEY_CURRENT_CONFIG":
+            keylink = winreg.HKEY_CURRENT_CONFIG
+        else:
+            client.sendall(bytes("Sai duong dan", "utf8"))
+            check = client.recv(1024).decode("utf8")
+            return
+        
+        def deleteSubkey(key, s_key):
+
+            open_key = winreg.OpenKey(key, s_key ,0, winreg.KEY_ALL_ACCESS)
+            infokey = winreg.QueryInfoKey(open_key)
+            for x in range(0, infokey[0]):
+                subkey = winreg.EnumKey(open_key, 0)
+                try:
+                    winreg.DeleteKey(open_key, subkey)
+                except:
+                    deleteSubkey(key, s_key)
+
+            winreg.DeleteKey(open_key,"")
+            open_key.Close()
+
+            access_registry = winreg.ConnectRegistry(None, keylink)
+            client.sendall(bytes("Da xoa thanh cong","utf8"))
+            check = client.recv(1024).decode("utf8")
+
+        try:
+            deleteSubkey(keylink, hkey[1])
+        except:
+            client.sendall(bytes("Sai duong dan", "utf8"))
+            check = client.recv(1024).decode("utf8")
+            return
+
     #Command cho server:
     while True:
         #try:
@@ -382,7 +446,8 @@ def Server_Running():
             elif i == "Nhan Reg": NhanReg()
             elif i == "Get value reg": LayRegValue()
             elif i == "Set registry value": SetValue()
-
+            elif i == "Create key reg": Createkey()
+            elif i == "Delete key": Deletekey()
 
         Command = client.recv(1024).decode("utf8")
         client.sendall(bytes("Da nhan lenh","utf8"))
