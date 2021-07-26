@@ -274,28 +274,90 @@ def Server_Running():
         else:
             client.sendall(bytes("Sai đường dẫn", "utf8"))
             check = client.recv(1024).decode("utf8")
-            check=False
-        if check == True:
-            with winreg.ConnectRegistry(None, keylink) as winKey:
-                try:
-                    with winreg.OpenKey(winKey, hkey[1], 0, winreg.KEY_ALL_ACCESS) as sub_key:
-                        i = 0
-                        while True:
-                            try:
-                                value = winreg.EnumValue(sub_key, i)
-                                if value[0] == Name: 
-                                    client.sendall(bytes(value[1],"utf8"))
-                                    check = client.recv(1024).decode("utf8")
-                                    break
-                                i+=1
-                            except:
-                                client.sendall(bytes("Khong tim thay", "utf8"))
+            return
+        
+        with winreg.ConnectRegistry(None, keylink) as winKey:
+            try:
+                with winreg.OpenKey(winKey, hkey[1], 0, winreg.KEY_ALL_ACCESS) as sub_key:
+                    i = 0
+                    while True:
+                        try:
+                            value = winreg.EnumValue(sub_key, i)
+                            if value[0] == Name: 
+                                client.sendall(bytes(value[1],"utf8"))
                                 check = client.recv(1024).decode("utf8")
                                 break
+<<<<<<< HEAD
                 except:
                     client.sendall(bytes("Sai đường dẫn", "utf8"))
                     check = client.recv(1024).decode("utf8")
     
+=======
+                            i+=1
+                        except:
+                            client.sendall(bytes("Khong tim thay", "utf8"))
+                            check = client.recv(1024).decode("utf8")
+                            break
+            except:
+                client.sendall(bytes("Sai đường dẫn", "utf8"))
+                check = client.recv(1024).decode("utf8")
+
+    def SetValue():
+        import winreg
+        Name = client.recv(1024).decode("utf8")
+        client.sendall(bytes("Name recieved","utf8"))
+        Link = client.recv(1024).decode("utf8")
+        client.sendall(bytes("Link recieved","utf8"))
+        data_type = client.recv(1024).decode("utf8")
+        client.sendall(bytes("Data type recieved","utf8"))
+        value = client.recv(2048).decode("utf8")
+        client.sendall(bytes("Value recieved","utf8"))
+
+        hkey = Link.split("\\",2)
+        check= True
+        if hkey[0] == "HKEY_CLASSES_ROOT":
+            keylink = winreg.HKEY_CLASSES_ROOT
+        elif hkey[0] == "HKEY_CURRENT_USER":
+            keylink = winreg.HKEY_CURRENT_USER
+        elif hkey[0] == "HKEY_LOCAL_MACHINE":
+            keylink = winreg.HKEY_LOCAL_MACHINE
+        elif hkey[0] == "HKEY_USERS":
+            keylink = winreg.HKEY_USERS
+        elif hkey[0] == "HKEY_CURRENT_CONFIG":
+            keylink = winreg.HKEY_CURRENT_CONFIG
+        else:
+            client.sendall(bytes("Sai duong dan", "utf8"))
+            check = client.recv(1024).decode("utf8")
+            return
+        if data_type == "Kiểu dữ liệu": 
+            client.sendall(bytes("fail", "utf8"))
+            check = client.recv(1024).decode("utf8")
+            return
+
+        with winreg.ConnectRegistry(None, keylink) as winKey:
+            try:
+                with winreg.OpenKey(winKey, hkey[1], 0, winreg.KEY_ALL_ACCESS) as sub_key:
+                    if data_type == "String": 
+                        winreg.SetValueEx(sub_key, Name, 0, winreg.REG_SZ,value)
+                    elif data_type == "Binary": 
+                        winreg.SetValueEx(sub_key, Name, 0, winreg.REG_BINARY,value.encode('latin-1'))
+                    elif data_type == "DWORD": 
+                        winreg.SetValueEx(sub_key, Name, 0, winreg.REG_DWORD,int(value))
+                    elif data_type == "QWORD": 
+                        winreg.SetValueEx(sub_key, Name, 0, winreg.REG_QWORD,int(value))
+                    elif data_type == "Multi-string": 
+                        arr = value.split()
+                        winreg.SetValueEx(sub_key, Name, 0, winreg.REG_MULTI_SZ,arr)
+                    elif data_type == "Expandable String": 
+                        winreg.SetValueEx(sub_key, Name, 0, winreg.REG_EXPAND_SZ,value)
+                    client.sendall(bytes("succeed", "utf8"))
+                    check = client.recv(1024).decode("utf8")  
+            except:
+                client.sendall(bytes("Sai đường dẫn", "utf8"))
+                check = client.recv(1024).decode("utf8")
+                  
+        
+>>>>>>> f21da62156f2c8ea0c4d0842f9edde5739280c04
     #Command cho server:
     while True:
         #try:
@@ -319,6 +381,7 @@ def Server_Running():
                 Process_start(Process_Name)
             elif i == "Nhan Reg": NhanReg()
             elif i == "Get value reg": LayRegValue()
+            elif i == "Set registry value": SetValue()
 
 
         Command = client.recv(1024).decode("utf8")
