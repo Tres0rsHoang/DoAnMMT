@@ -20,6 +20,7 @@ app.title("MainWindow")
 def NewWindow():
     global HOST
     global client
+
     HOST = Host.get()
     server_address = (HOST,PORT)
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -28,6 +29,7 @@ def NewWindow():
         connected = messagebox.showinfo("Kết nối", "Bạn đã kết nối thành công!!!")
     except:
         connected = messagebox.showinfo("Kết nối", "IP sai")
+
 def AppRunning():
     newWin = Tk()
     newWin.title("listApp")
@@ -42,6 +44,7 @@ def AppRunning():
         list_id = [''] * 100
         list_name = [''] * 100
         list_thread = [''] * 100
+
         client.sendall(bytes("Xem App","utf8"))
         check = client.recv(1024).decode("utf8")
         size, list_id, list_name, list_thread = Recieve_App_Running(client, HOST, PORT)
@@ -69,7 +72,6 @@ def AppRunning():
 
         for i in range(size):
             my_tree.insert(parent='', index='end',iid=0+i, text = list_name[i], values=(list_id[i],list_thread[i]))
-
     def PressKill():
         newWin2 = Tk()
         newWin2.geometry("300x50")
@@ -89,9 +91,11 @@ def AppRunning():
         def PressKill2():
             ID = enterID.get()
             client.sendall(bytes("Xoa App","utf8"))
+            check = client.recv(1024).decode("utf8")
+
             try:
-                check = client.recv(1024).decode("utf8")
                 client.sendall(bytes(ID,"utf8"))
+                check = client.recv(1024).decode("utf8")
                 click = messagebox.showinfo("", "Đã diệt chương trình")
             except:
                 click = messagebox.showinfo("", "Không tìm thấy chương trình")
@@ -330,6 +334,7 @@ def PrintScreen():
         myfile.close()
 
     def savefile():
+        import tkinter
         myScreenshot = open("anhcuatui.png",'rb')
         data = myScreenshot.read()
         fname = tkinter.filedialog.asksaveasfilename(title=u'Save file', filetypes=[("PNG", ".png")])
@@ -347,6 +352,7 @@ def PrintScreen():
 
     but1 = Button(newApp,text="Lưu",width=5,height=5,borderwidth=5,command=savefile)
     but1.grid(row=1,column=1)
+
 def Keystroke():
     size = 0
     string = ''
@@ -422,16 +428,18 @@ def Registry():
         ReadFile = open(link,'r')
         line = ReadFile.read()
         FileShow.insert(1.0,line)
+
     Browser = Button(newapp, text="Browser...", command=browse_button, padx = 28)
     Browser.grid(row=0, column=1, padx = 10)       
     def SendReg():
-        nonlocal link, FileShow
+        nonlocal FileShow
         client.sendall(bytes("Nhan Reg", "utf8"))
         check = client.recv(1024).decode("utf8") 
 
         line = FileShow.get(1.0,END)
         client.sendall(bytes(line,"utf8"))
         check = client.recv(1024).decode("utf8")
+
     GuiNoiDung = Button(newapp, text="Gửi nội dung", command = SendReg, padx = 20, pady = 28)
     GuiNoiDung.grid(row=2, column=1, padx = 10)
     frame = LabelFrame(newapp, text="Sửa giá trị trực tiếp")
@@ -541,6 +549,7 @@ def Registry():
             else: 
                 text = Label(Nofi_data_frame, text="Không tìm thấy")
                 text.pack(side = BOTTOM)
+
         elif SetValue.get() == "Set value":
             client.sendall(bytes("Set registry value","utf8"))
             check = client.recv(1024).decode("utf8")
@@ -576,6 +585,7 @@ def Registry():
             Link = DuongDan.get()
             client.sendall(bytes(Link,"utf8"))
             check = client.recv(1024).decode("utf8")
+
             data = client.recv(1024).decode("utf8")
             client.sendall(bytes("Da nhan","utf8"))
             if data == "Da tao thanh cong":
@@ -589,6 +599,7 @@ def Registry():
             Link = DuongDan.get()
             client.sendall(bytes(Link,"utf8"))
             check = client.recv(1024).decode("utf8")
+
             data = client.recv(1024).decode("utf8")
             client.sendall(bytes("Da nhan","utf8"))
 
