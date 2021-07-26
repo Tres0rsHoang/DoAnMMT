@@ -24,14 +24,11 @@ def Recieve_App_Running(client, HOST, PORT):
 		client.sendall(bytes(data,"utf8"))
 	return size, list_id, list_name, list_thread
 	
-def Recieve_Hook(client, HOST, PORT):
-	size = 0
-	size = client.recv(1024).decode("utf8")
-	size = int(size)
-	client.sendall(bytes(str(size),"utf8"))
+def Recieve_Hook(client):
 	data = client.recv(1024).decode("utf8")
-	list_string= data
+	list_string = data
 	client.sendall(bytes(data,"utf8"))	
+	return list_string
 
 	return size, list_string
 def Recieve_Process_Running(client, HOST, PORT):

