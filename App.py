@@ -418,18 +418,20 @@ def Registry():
         folder_path.set(filename)
         linkfile.insert(0, filename)
         link = linkfile.get()
+
         ReadFile = open(link,'r')
         line = ReadFile.read()
         FileShow.insert(1.0,line)
+
     Browser = Button(newapp, text="Browser...", command=browse_button, padx = 28)
     Browser.grid(row=0, column=1, padx = 10)    
     
     def SendReg():
         nonlocal link, FileShow
         client.sendall(bytes("Nhan Reg", "utf8"))
-        check = client.recv(1024).decode("utf8")       
+        check = client.recv(1024).decode("utf8") 
+
         line = FileShow.get(1.0,END)
-        print(line)
         client.sendall(bytes(line,"utf8"))
         check = client.recv(1024).decode("utf8")
 

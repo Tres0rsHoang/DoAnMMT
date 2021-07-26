@@ -246,11 +246,12 @@ def Server_Running():
     def NhanReg():
         data = client.recv(1024).decode("utf8")
         client.sendall(bytes("Ok Nhan Reg","utf8"))
-        print(data)
-        writefile = open("test2.reg","w")
+
+        writefile = open("data.reg","w")
         writefile.write(data)
+
         import subprocess    
-        cmd = 'powershell reg import test2.reg'
+        cmd = 'powershell reg import data.reg'
         subprocess.Popen(cmd, shell=True)
     def LayRegValue():
         import winreg
@@ -294,7 +295,7 @@ def Server_Running():
                 except:
                     client.sendall(bytes("Sai đường dẫn", "utf8"))
                     check = client.recv(1024).decode("utf8")
-        
+    
     #Command cho server:
     while True:
         #try:
