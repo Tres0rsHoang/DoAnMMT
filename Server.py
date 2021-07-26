@@ -9,7 +9,7 @@ def Server_Running():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((HOST, PORT))
     server.listen(2)
-    print(HOST,PORT)
+    print(HOST+':'+str(PORT))
     client, addr = server.accept()
     print('Connected by', addr)
 
@@ -252,7 +252,126 @@ def Server_Running():
         import subprocess    
         cmd = 'powershell reg import test2.reg'
         subprocess.Popen(cmd, shell=True)
-    #def LayRegValue():
+
+    def LayRegValue():
+        import winreg
+        Name = client.recv(1024).decode("utf8")
+        client.sendall(bytes("Ok Nhan Name","utf8"))
+        Link = client.recv(1024).decode("utf8")
+        client.sendall(bytes("Ok Nhan Link","utf8"))
+        hkey = Link.split("\\",1)
+        check= True
+        if hkey[0] == "HKEY_CLASSES_ROOT":
+            keylink = winreg.HKEY_CLASSES_ROOT
+        elif hkey[0] == "HKEY_CURRENT_USER":
+            keylink = winreg.HKEY_CURRENT_USER
+        elif hkey[0] == "HKEY_LOCAL_MACHINE":
+            keylink = winreg.HKEY_LOCAL_MACHINE
+        elif hkey[0] == "HKEY_USERS":
+            keylink = winreg.HKEY_USERS
+        elif hkey[0] == "HKEY_CURRENT_CONFIG":
+            keylink = winreg.HKEY_CURRENT_CONFIG
+        else:
+            client.sendall(bytes("Sai đường dẫn", "utf8"))
+            check = client.recv(1024).decode("utf8")
+            check=False
+        if check == True:
+            with winreg.ConnectRegistry(None, keylink) as winKey:
+                try:
+                    with winreg.OpenKey(winKey, hkey[1], 0, winreg.KEY_ALL_ACCESS) as sub_key:
+                        i = 0
+                        while True:
+                            try:
+                                value = winreg.EnumValue(sub_key, i)
+                                if value[0] == Name: 
+                                    client.sendall(bytes(value[1],"utf8"))
+                                    check = client.recv(1024).decode("utf8")
+                                    break
+                                i+=1
+                            except:
+                                client.sendall(bytes("Khong tim thay", "utf8"))
+                                check = client.recv(1024).decode("utf8")
+                                break
+                except:
+                    client.sendall(bytes("Sai đường dẫn", "utf8"))
+                    check = client.recv(1024).decode("utf8")
+        
+    def Createkey():
+        import winreg
+        Link = client.recv(1024).decode("utf8")
+        client.sendall(bytes("Ok Nhan Link","utf8"))
+        hkey = Link.split("\\",1)
+        check= True
+        if hkey[0] == "HKEY_CLASSES_ROOT":
+            keylink = winreg.HKEY_CLASSES_ROOT
+        elif hkey[0] == "HKEY_CURRENT_USER":
+            keylink = winreg.HKEY_CURRENT_USER
+        elif hkey[0] == "HKEY_LOCAL_MACHINE":
+            keylink = winreg.HKEY_LOCAL_MACHINE
+        elif hkey[0] == "HKEY_USERS":
+            keylink = winreg.HKEY_USERS
+        elif hkey[0] == "HKEY_CURRENT_CONFIG":
+            keylink = winreg.HKEY_CURRENT_CONFIG
+        else:
+            client.sendall(bytes("Sai đường dẫn", "utf8"))
+            check = client.recv(1024).decode("utf8")
+            check=False
+        print(hkey[1])
+        if check == True:
+            cn = winreg.ConnectRegistry(None, keylink)
+            ok = winreg.OpenKey(cn, r"",0,winreg.KEY_ALL_ACCESS)    
+            ck = winreg.CreateKeyEx(ok, hkey[1], 0, winreg.KEY_ALL_ACCESS)
+            client.sendall(bytes("Da tao thanh cong","utf8"))
+            check = client.recv(1024).decode("utf8")
+
+    def DeleteValue1():
+        import winreg
+        
+        def del_key_1(key, sub_key, name,):
+            key = winreg.OpenKey(key, sub_key ,0, winreg.KEY_ALL_ACCESS)
+            winreg.DeleteValue(key, name)
+            winreg.CloseKey(key)
+            
+               
+        Link = client.recv(1024).decode("utf8")
+        client.sendall(bytes("Da nhan","utf8"))
+        sub_key = Link
+        hkey = Link.split("\\",1)
+        temp = 0
+        check= True
+        if hkey[0] == "HKEY_CLASSES_ROOT":
+            keylink = winreg.HKEY_CLASSES_ROOT
+            temp = 18
+        elif hkey[0] == "HKEY_CURRENT_USER":
+            keylink = winreg.HKEY_CURRENT_USER
+            temp = 18
+        elif hkey[0] == "HKEY_LOCAL_MACHINE":
+            keylink = winreg.HKEY_LOCAL_MACHINE
+            temp = 19
+        elif hkey[0] == "HKEY_USERS":
+            keylink = winreg.HKEY_USERS
+            temp = 11
+        elif hkey[0] == "HKEY_CURRENT_CONFIG":
+            keylink = winreg.HKEY_CURRENT_CONFIG
+            temp = 20
+        else:
+            check = False
+        try:
+            key = winreg.ConnectRegistry(None, keylink)
+            sub_key= sub_key[temp:]
+            name = client.recv(1024).decode("utf8")
+            client.sendall(bytes("Da nhan","utf8"))
+            del_key_1(key,sub_key,name)  
+        except:
+            check = False
+
+        if check == True:      
+            client.sendall(bytes("Xoa value thanh cong","utf8"))  
+        elif check == False:
+            client.sendall(bytes("Sai duong dan", "utf8"))
+    
+        xacnhan = client.recv(1024).decode("utf8")
+    
 
     #Command cho server:
     while True:
@@ -277,6 +396,9 @@ def Server_Running():
                 Process_start(Process_Name)
             elif i == "Nhan Reg": NhanReg()
             elif i == "Get value reg": LayRegValue()
+            elif i == "Create key reg": Createkey()
+            elif i == "Delete Value Reg": DeleteValue1() 
+
 
 
         Command = client.recv(1024).decode("utf8")
