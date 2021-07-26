@@ -19,9 +19,7 @@ def Server_Running():
         import subprocess
         cmd = 'powershell "Get-Process |where {$_.mainWindowTItle} |Select-Object id, name, @{Name=\'ThreadCount\';Expression ={$_.Threads.Count}}| format-table'
         proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        '''for line in proc.stdout:
-            if line.rstrip():
-                print(line.decode().rstrip().lstrip())'''
+
         count = 0
         size = 0
         list_name = ['' for i in range(100)]
@@ -192,8 +190,7 @@ def Server_Running():
 
         cmd = 'powershell "Get-Process | Select-Object id, name, @{Name=\'ThreadCount\';Expression ={$_.Threads.Count}}| format-table'
         proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        '''for line in proc.stdout:
-            if line.rstrip(): print(line.decode().rstrip().lstrip())'''
+
         count = 0
         size = 0
         list_name = ['' for i in range(100000)]
@@ -212,8 +209,6 @@ def Server_Running():
                 list_name[size] = list_id_name_thread[1]
                 list_id[size] = list_id_name_thread[0]
                 size += 1
-        '''for i in range(size):
-            print(list_id[i], list_name[i], list_thread[i])'''
 
         client.sendall(bytes(str(size),"utf8"))
         for i in range(size):
@@ -370,7 +365,6 @@ def Server_Running():
             client.sendall(bytes("Sai duong dan", "utf8"))
             check = client.recv(1024).decode("utf8")
             return
-
         cn = winreg.ConnectRegistry(None, keylink)
         ok = winreg.OpenKey(cn, r"",0,winreg.KEY_ALL_ACCESS)    
         ck = winreg.CreateKeyEx(ok, hkey[1], 0, winreg.KEY_ALL_ACCESS)
