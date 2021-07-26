@@ -252,13 +252,14 @@ def Server_Running():
         import subprocess    
         cmd = 'powershell reg import test2.reg'
         subprocess.Popen(cmd, shell=True)
+
     def LayRegValue():
         import winreg
         Name = client.recv(1024).decode("utf8")
         client.sendall(bytes("Ok Nhan Name","utf8"))
         Link = client.recv(1024).decode("utf8")
         client.sendall(bytes("Ok Nhan Link","utf8"))
-        hkey = Link.split("\\",2)
+        hkey = Link.split("\\",1)
         check= True
         if hkey[0] == "HKEY_CLASSES_ROOT":
             keylink = winreg.HKEY_CLASSES_ROOT
@@ -295,6 +296,35 @@ def Server_Running():
                     client.sendall(bytes("Sai đường dẫn", "utf8"))
                     check = client.recv(1024).decode("utf8")
         
+    def Createkey():
+        import winreg
+        Link = client.recv(1024).decode("utf8")
+        client.sendall(bytes("Ok Nhan Link","utf8"))
+        hkey = Link.split("\\",1)
+        check= True
+        if hkey[0] == "HKEY_CLASSES_ROOT":
+            keylink = winreg.HKEY_CLASSES_ROOT
+        elif hkey[0] == "HKEY_CURRENT_USER":
+            keylink = winreg.HKEY_CURRENT_USER
+        elif hkey[0] == "HKEY_LOCAL_MACHINE":
+            keylink = winreg.HKEY_LOCAL_MACHINE
+        elif hkey[0] == "HKEY_USERS":
+            keylink = winreg.HKEY_USERS
+        elif hkey[0] == "HKEY_CURRENT_CONFIG":
+            keylink = winreg.HKEY_CURRENT_CONFIG
+        else:
+            client.sendall(bytes("Sai đường dẫn", "utf8"))
+            check = client.recv(1024).decode("utf8")
+            check=False
+        print(hkey[1])
+        if check == True:
+            cn = winreg.ConnectRegistry(None, keylink)
+            ok = winreg.OpenKey(cn, r"",0,winreg.KEY_ALL_ACCESS)    
+            ck = winreg.CreateKeyEx(ok, hkey[1], 0, winreg.KEY_ALL_ACCESS)
+            client.sendall(bytes("Da tao thanh cong","utf8"))
+            check = client.recv(1024).decode("utf8")
+
+
     #Command cho server:
     while True:
         #try:
@@ -318,6 +348,8 @@ def Server_Running():
                 Process_start(Process_Name)
             elif i == "Nhan Reg": NhanReg()
             elif i == "Get value reg": LayRegValue()
+            elif i == "Create key reg": Createkey()
+
 
 
         Command = client.recv(1024).decode("utf8")

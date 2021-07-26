@@ -532,6 +532,19 @@ def Registry():
                 text = Label(Nofi_data_frame, text="Không tìm thấy")
                 text.pack(side = BOTTOM)
 
+        elif SetValue.get() == "Create key":
+            client.sendall(bytes("Create key reg","utf8"))
+            check = client.recv(1024).decode("utf8")
+            Link = DuongDan.get()
+            client.sendall(bytes(Link,"utf8"))
+            check = client.recv(1024).decode("utf8")
+            data = client.recv(1024).decode("utf8")
+            client.sendall(bytes("Da nhan","utf8"))
+            text = Label(Nofi_data_frame, text=data)
+            text.pack(side = BOTTOM)
+
+                
+
     def PressXoa():
         for widget in Nofi_data_frame.winfo_children(): widget.destroy()
 
