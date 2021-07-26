@@ -553,7 +553,7 @@ def Registry():
 
             status = client.recv(1024).decode("utf8")
             client.sendall(bytes("ok", "utf8"))
-            print(status)
+            
             if status == "succeed":
                 text = Label(Nofi_data_frame, text="Set value successfully")
                 text.pack(side = BOTTOM)
