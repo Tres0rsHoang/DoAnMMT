@@ -3,9 +3,9 @@ from tkinter import messagebox
 from Client import *
 import tkinter as tk
 import socket
-from PIL import ImageTk,Image
 from tkinter import ttk
 from tkinter import filedialog
+from PIL import ImageTk,Image
 
 global folder_path
 
@@ -482,6 +482,10 @@ def Registry():
             NameVal.grid_forget()
             Value.grid_forget()
             DuLieu.grid_forget()
+        elif SetValue.get() == "Delete key":
+            NameVal.grid_forget()
+            Value.grid_forget()
+            DuLieu.grid_forget()
 
     SetValue = ttk.Combobox(frame, value=option)
     SetValue.insert(0, "Chọn chức năng")
@@ -534,6 +538,17 @@ def Registry():
 
         elif SetValue.get() == "Create key":
             client.sendall(bytes("Create key reg","utf8"))
+            check = client.recv(1024).decode("utf8")
+            Link = DuongDan.get()
+            client.sendall(bytes(Link,"utf8"))
+            check = client.recv(1024).decode("utf8")
+            data = client.recv(1024).decode("utf8")
+            client.sendall(bytes("Da nhan","utf8"))
+            text = Label(Nofi_data_frame, text=data)
+            text.pack(side = BOTTOM)
+            
+        elif SetValue.get() == "Delete key":
+            client.sendall(bytes("Delete key","utf8"))
             check = client.recv(1024).decode("utf8")
             Link = DuongDan.get()
             client.sendall(bytes(Link,"utf8"))
