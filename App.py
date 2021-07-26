@@ -7,6 +7,7 @@ from PIL import ImageTk,Image
 from tkinter import ttk
 from tkinter import filedialog
 
+
 global folder_path
 
 HOST = '127.0.0.1'
@@ -482,6 +483,10 @@ def Registry():
             NameVal.grid_forget()
             Value.grid_forget()
             DuLieu.grid_forget()
+        elif SetValue.get() == "Delete key":
+            NameVal.grid_forget()
+            Value.grid_forget()
+            DuLieu.grid_forget()
 
     SetValue = ttk.Combobox(frame, value=option)
     SetValue.insert(0, "Chọn chức năng")
@@ -532,16 +537,6 @@ def Registry():
                 text = Label(Nofi_data_frame, text="Không tìm thấy")
                 text.pack(side = BOTTOM)
 
-        elif SetValue.get() == "Create key":
-            client.sendall(bytes("Create key reg","utf8"))
-            check = client.recv(1024).decode("utf8")
-            Link = DuongDan.get()
-            client.sendall(bytes(Link,"utf8"))
-            check = client.recv(1024).decode("utf8")
-            data = client.recv(1024).decode("utf8")
-            client.sendall(bytes("Da nhan","utf8"))
-            text = Label(Nofi_data_frame, text=data)
-            text.pack(side = BOTTOM)
             
         elif SetValue.get() == "Delete value":
             client.sendall(bytes("Delete Value Reg","utf8"))
@@ -555,12 +550,27 @@ def Registry():
             client.sendall(bytes(Val,"utf8"))
             check = client.recv(1024).decode("utf8")
 
+        elif SetValue.get() == "Create key":
+            client.sendall(bytes("Create key reg","utf8"))
+            check = client.recv(1024).decode("utf8")
+            Link = DuongDan.get()
+            client.sendall(bytes(Link,"utf8"))
+            check = client.recv(1024).decode("utf8")
             data = client.recv(1024).decode("utf8")
-            client.sendall(bytes("OK","utf8"))
-
+            client.sendall(bytes("Da nhan","utf8"))
             text = Label(Nofi_data_frame, text=data)
             text.pack(side = BOTTOM)
-
+            
+        elif SetValue.get() == "Delete key":
+            client.sendall(bytes("Delete key","utf8"))
+            check = client.recv(1024).decode("utf8")
+            Link = DuongDan.get()
+            client.sendall(bytes(Link,"utf8"))
+            check = client.recv(1024).decode("utf8")
+            data = client.recv(1024).decode("utf8")
+            client.sendall(bytes("Da nhan","utf8"))
+            text = Label(Nofi_data_frame, text=data)
+            text.pack(side = BOTTOM)
 
                 
 
