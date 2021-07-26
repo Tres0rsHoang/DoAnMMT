@@ -428,7 +428,6 @@ def Registry():
         ReadFile = open(link,'r')
         line = ReadFile.read()
         FileShow.insert(1.0,line)
-
     Browser = Button(newapp, text="Browser...", command=browse_button, padx = 28)
     Browser.grid(row=0, column=1, padx = 10)       
     def SendReg():
@@ -439,7 +438,6 @@ def Registry():
         line = FileShow.get(1.0,END)
         client.sendall(bytes(line,"utf8"))
         check = client.recv(1024).decode("utf8")
-
     GuiNoiDung = Button(newapp, text="Gửi nội dung", command = SendReg, padx = 20, pady = 28)
     GuiNoiDung.grid(row=2, column=1, padx = 10)
     frame = LabelFrame(newapp, text="Sửa giá trị trực tiếp")
@@ -568,9 +566,9 @@ def Registry():
 
             status = client.recv(1024).decode("utf8")
             client.sendall(bytes("ok", "utf8"))
-            
+
             if status == "succeed":
-                text = Label(Nofi_data_frame, text="Set value successfully")
+                text = Label(Nofi_data_frame, text="Set giá trị thành công")
                 text.pack(side = BOTTOM)
             elif status == "Sai duong dan":
                 text = Label(Nofi_data_frame, text="Sai đường dẫn")
