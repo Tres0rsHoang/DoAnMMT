@@ -453,14 +453,18 @@ def Server_Running():
             temp = 20
         else:
             check = False
-        try:
-            key = winreg.ConnectRegistry(None, keylink)
-            sub_key= sub_key[temp:]
-            name = client.recv(1024).decode("utf8")
-            client.sendall(bytes("Da nhan","utf8"))
-            del_key_1(key,sub_key,name)  
-        except:
-            check = False
+
+        name = client.recv(1024).decode("utf8")
+        client.sendall(bytes("Da nhan","utf8"))
+
+        if check == True:
+            try:
+                key = winreg.ConnectRegistry(None, keylink)
+                sub_key= sub_key[temp:]
+                del_key_1(key,sub_key,name)  
+            except:
+                check = False
+
         yeucau = client.recv(1024).decode("utf8")
         if check == True:      
             client.sendall(bytes("Xoa value thanh cong","utf8"))  

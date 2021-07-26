@@ -486,6 +486,7 @@ def Registry():
             NameVal.grid_forget()
             Value.grid_forget()
             DuLieu.grid_forget()
+
         elif SetValue.get() == "Delete key":
             NameVal.grid_forget()
             Value.grid_forget()
@@ -610,19 +611,22 @@ def Registry():
 
             
         elif SetValue.get() == "Delete value":
+            
             client.sendall(bytes("Delete Value Reg","utf8"))
             check = client.recv(1024).decode("utf8")
+            
             dd = DuongDan.get()
             Val = NameVal.get()
-            print(dd)
+
             client.sendall(bytes(dd,"utf8"))
             check = client.recv(1024).decode("utf8")
             
             client.sendall(bytes(Val,"utf8"))
             check = client.recv(1024).decode("utf8")
-            client.sendall(bytes("Gui noi dung","utf8"))
             
+            client.sendall(bytes("Gui noi dung","utf8"))            
             data = client.recv(1024).decode("utf8")
+            
             text = Label(Nofi_data_frame, text=data)
             text.pack(side = BOTTOM)
 
