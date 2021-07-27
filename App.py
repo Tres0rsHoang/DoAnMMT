@@ -367,7 +367,6 @@ def Keystroke():
     
     def hook():
         nonlocal unhook_press, hook_press
-        print(unhook_press, hook_press)
         if hook_press == True:
             return
         hook_press = True
