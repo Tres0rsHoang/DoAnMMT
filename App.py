@@ -367,6 +367,7 @@ def Keystroke():
     
     def hook():
         nonlocal unhook_press, hook_press
+        print(unhook_press, hook_press)
         if hook_press == True:
             return
         hook_press = True
@@ -383,13 +384,14 @@ def Keystroke():
             unhook_press = True
             hook_press = False
     def xem():
-        nonlocal string, unhook_press
+        nonlocal string, hook_press, unhook_press
         if unhook_press == False: 
             client.sendall(bytes("Unhook Key","utf8"))
             string = Recieve_Hook(client)
-            unhook_press = True
         e.delete(1.0,END)
         e.insert(1.0,string)
+        unhook_press = True
+        hook_press = False
     def xoa():
         e.delete(1.0,END)
 

